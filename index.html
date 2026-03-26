@@ -820,9 +820,9 @@ footer {
         <div class="enhance-row">
           <button class="btn-enhance" id="enhBtn" onclick="enhanceDesc()">
             <span class="spin" id="enhSpin" style="display:none"></span>
-            ✦ Enhance Description
+            ✦ Auto-Generate Description
           </button>
-          <span class="enhance-note" id="enhNote">Rewrites for better Claude triggering</span>
+          <span class="enhance-note" id="enhNote">Generates trigger description from skill content</span>
         </div>
       </div>
 
@@ -1093,14 +1093,14 @@ function enhanceDesc() {
   const spin = document.getElementById('enhSpin');
   const note = document.getElementById('enhNote');
   btn.disabled = true; spin.style.display = 'inline-block';
-  note.textContent = 'Enhancing... ✨';
+  note.textContent = 'Generating...';
 
   setTimeout(() => {
     try {
       const enhanced = localEnhance(currentSlug, document.getElementById('descTA').value, currentParsed);
       document.getElementById('descTA').value = enhanced;
       renderPreview(currentParsed, enhanced);
-      note.textContent = '✓ Enhanced! Edit if needed.';
+      note.textContent = '✓ Generated! Edit as needed.';
       toast('Description enhanced! ✨', 'ok');
     } catch(e) {
       note.textContent = 'Something went wrong 😅';
@@ -1110,43 +1110,70 @@ function enhanceDesc() {
   }, 350);
 }
 
-// Covers 20+ skill categories — pure JS, zero dependencies
+// Description generator — name-first matching prevents false positives.
+// Generic words like "track", "task", "file" in skill bodies caused wrong matches.
 function localEnhance(name, currentDesc, parsed) {
-  // Haystack uses name + skill body only — NOT currentDesc (textarea value),
-  // because that may contain enhanced text from a previously loaded skill.
-  const haystack = (name + ' ' + (parsed.body || '') + ' ' + (parsed.description || '')).toLowerCase();
+  const nameLow  = name.toLowerCase();
+  const origDesc = (parsed.description || '').trim(); // from SKILL.md, never textarea
 
+  // Each entry: [namePattern, strictBodyPattern, trigger phrase]
+  // namePattern is checked against slug name (reliable).
+  // strictBodyPattern only used if name doesn't match — uses API-specific terms only.
   const cats = [
-    [/spotify|music|playlist|track|playback|song/,         'play, pause, skip, or search Spotify music'],
-    [/github|git|repo|pull.request|issue|commit|branch/,   'manage GitHub repos, issues, or pull requests'],
-    [/notion|page|database|block|workspace/,               'create or update Notion pages and databases'],
-    [/slack|channel|dm/,                                 'send or read Slack messages and channels'],
-    [/stripe|payment|invoice|charge|subscription/,         'handle Stripe payments and invoices'],
-    [/gmail|email|inbox|send.*mail/,                       'send, read, or manage emails'],
-    [/google.calendar|calendar|event|schedule/,            'create or manage calendar events'],
-    [/jira|ticket|sprint|atlassian/,                       'create or update Jira tickets and sprints'],
-    [/linear|cycle|project.issue/,                         'manage Linear issues and cycles'],
-    [/postgres|mysql|sql|database|query|db/,             'run SQL queries or interact with databases'],
-    [/web.search|tavily|exa|browse|scrape/,              'search the web or scrape content from URLs'],
-    [/twitter|tweet|x\.com/,                              'post or read tweets and social content'],
-    [/file|upload|download|convert|pdf|xlsx/,              'work with files and document conversions'],
-    [/docker|container|kubernetes|k8s/,                    'manage Docker containers or Kubernetes'],
-    [/aws|s3|lambda|ec2|gcp|azure/,                        'interact with cloud services'],
-    [/shopify|product|order|ecommerce/,                    'manage Shopify products and orders'],
-    [/discord|server|bot|webhook/,                         'send Discord messages or manage servers'],
-    [/figma|design|wireframe/,                             'inspect Figma designs and components'],
-    [/asana|trello|task|todo/,                             'manage tasks and projects'],
-    [/api|endpoint|rest|curl|http/,                        'make API calls or HTTP requests'],
-    [/bash|shell|terminal|cli|script/,                     'run terminal commands and shell scripts'],
+    [/spotify|spogo/,             /spotify\.com|spogo/,                'play, pause, skip, or search Spotify music'],
+    [/github|githubissue/,        /github\.com|octokit|pull.request/,  'manage GitHub repos, issues, and pull requests'],
+    [/notion/,                    /notion\.so|notionhq/,               'create and update Notion pages and databases'],
+    [/slack/,                     /slack\.com|slack.token/,            'send and read Slack messages and channels'],
+    [/stripe/,                    /stripe\.com|payment.intent/,        'handle Stripe payments and invoices'],
+    [/gmail|google.mail/,         /gmail\.googleapis/,                 'send, read, and manage Gmail messages'],
+    [/gcal|google.calendar/,      /calendar\.googleapis|calendarId/,   'create and manage Google Calendar events'],
+    [/jira/,                      /atlassian|jira\.com/,               'create and update Jira issues and sprints'],
+    [/linear/,                    /linear\.app|teamId/,                'manage Linear issues and projects'],
+    [/postgres|mysql|sqlite/,     /SELECT|INSERT|CREATE TABLE/,        'run SQL queries and interact with databases'],
+    [/tavily|web.search|searx/,   /tavily|search.results/,             'search the web and fetch current information'],
+    [/twitter|tweet/,             /twitter\.com|tweet.id/,             'post and read tweets and social content'],
+    [/docker/,                    /docker\.sock|container.id/,         'build and manage Docker containers'],
+    [/kubernetes|k8s/,            /kubectl|namespace/,                 'manage Kubernetes clusters and deployments'],
+    [/aws|s3.skill|lambda.skill/, /amazonaws\.com|boto3/,              'interact with AWS cloud services'],
+    [/shopify/,                   /shopify\.com/,                      'manage Shopify products and orders'],
+    [/discord/,                   /discord\.gg|guild.id/,              'send Discord messages and manage servers'],
+    [/figma/,                     /figma\.com|nodeId/,                 'inspect Figma designs and components'],
+    [/asana/,                     /asana\.com|task.gid/,               'manage Asana tasks and projects'],
+    [/productivity|pomodoro|deep.work/, /time.block|pomodoro|energy.management/, 'plan and manage productivity systems'],
+    [/habit|routine|daily/,       /habit.track|streak|daily.review/,   'track habits, routines, and daily reviews'],
+    [/memory|knowledge.base/,     /recall|store.*memory/,              'store and retrieve knowledge and memories'],
+    [/pdf/,                       /pypdf|pdfkit|pdf.read/,             'create, read, and edit PDF documents'],
+    [/bash|shell.script/,         /#!/,                                'run terminal commands and shell scripts'],
+    [/api.client|rest.client/,    /axios|requests\.get|fetch\(/,       'make API calls and HTTP requests'],
   ];
 
-  const match = cats.find(([re]) => re.test(haystack));
-  let desc = match
-    ? `Use when asked to ${match[1]}. `
+  // Name match first (most reliable — slug is intentional, body is generic prose)
+  let trigger = null;
+  for (const [nameRe,,phrase] of cats) {
+    if (nameRe.test(nameLow)) { trigger = phrase; break; }
+  }
+
+  // Strict body match only if name gave nothing
+  if (!trigger) {
+    const body = (parsed.body || '');
+    for (const [,bodyRe,phrase] of cats) {
+      if (bodyRe.test(body)) { trigger = phrase; break; }
+    }
+  }
+
+  // Build description
+  let desc = trigger
+    ? `Use when asked to ${trigger}. `
     : `Use for ${name.replace(/[-_]/g,' ')} tasks. `;
 
-  const orig = (currentDesc || '').trim();
-  if (orig && orig.length > 10) desc += orig.endsWith('.') ? orig : orig + '.';
+  // Append original description if it adds new info (not already covered, not a repeat)
+  if (origDesc && origDesc.length > 15) {
+    const firstWords = origDesc.toLowerCase().slice(0, 30);
+    if (!desc.toLowerCase().includes(firstWords.slice(0, 15))) {
+      desc += origDesc.endsWith('.') ? origDesc : origDesc + '.';
+    }
+  }
+
   if (parsed.requiresBins?.length) desc += ` Requires ${parsed.requiresBins.slice(0,2).join(' or ')}.`;
   if (parsed.requiresEnv?.length)  desc += ` Needs ${parsed.requiresEnv.slice(0,2).join(', ')} env var${parsed.requiresEnv.length > 1 ? 's' : ''}.`;
 
