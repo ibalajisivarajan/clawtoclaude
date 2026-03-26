@@ -403,37 +403,7 @@ body::after {
   min-height: 72px;
 }
 
-/* Enhance button */
-.enhance-row {
-  display: flex; align-items: center;
-  gap: 10px; margin-top: 10px;
-  flex-wrap: wrap;
-}
 
-.btn-enhance {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 9px 20px;
-  background: linear-gradient(135deg, #7c3aed, #a855f7);
-  border: none;
-  border-radius: 100px;
-  color: white;
-  font-family: var(--fun);
-  font-size: 13px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all 0.18s ease;
-  box-shadow: 0 4px 14px rgba(124,58,237,0.3);
-}
-.btn-enhance:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(124,58,237,0.4); }
-.btn-enhance:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-.enhance-note {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--ink3);
-}
 
 /* Code preview */
 .code-preview {
@@ -750,8 +720,8 @@ footer {
 
     <p class="hero-sub">
       Convert any <span class="hl-coral">ClawHub skill</span> to work with
-      <span class="hl-teal">Claude Code</span> — the fastest way to extend
-      your AI agent with 36k+ community-built skills. 🦞
+      <span class="hl-teal">Claude Code</span> the fastest way to extend
+      the agent with 36k+ community-built skills. 🦞
     </p>
 
     <div class="stat-row">
@@ -817,13 +787,7 @@ footer {
         <div class="field-box">
           <textarea id="descTA" rows="3" placeholder="Description loads here..."></textarea>
         </div>
-        <div class="enhance-row">
-          <button class="btn-enhance" id="enhBtn" onclick="enhanceDesc()">
-            <span class="spin" id="enhSpin" style="display:none"></span>
-            ✦ Enhance Description
-          </button>
-          <span class="enhance-note" id="enhNote">Rewrites for better Claude triggering</span>
-        </div>
+        <div class="field-hint">Edit to control when Claude triggers this skill. Be specific about the use case.</div>
       </div>
 
       <div class="field">
@@ -866,7 +830,7 @@ footer {
         <div class="step-num">3</div>
         <div class="step-content">
           <div class="step-title">Claude Polishes It</div>
-          <div class="step-body">Hit <strong style="color:#a855f7">✦ Enhance</strong> and Claude AI rewrites the description so it triggers correctly in Claude.ai. Compatibility warnings flag CLI tools or env vars you'll need.</div>
+          <div class="step-body">Edit the trigger description if needed — it controls when Claude activates this skill. Compatibility warnings flag CLI tools or env vars you'll need for Claude Code.</div>
         </div>
         <div class="step-emoji">✨</div>
       </div>
@@ -1075,70 +1039,7 @@ async function downloadSkill() {
   toast('Downloaded: ' + currentSlug + '.skill 🎉', 'ok');
 }
 
-// ── ENHANCE — 100% offline, works for everyone, no account needed ──────
-function enhanceDesc() {
-  if (!currentParsed) return;
-  const btn  = document.getElementById('enhBtn');
-  const spin = document.getElementById('enhSpin');
-  const note = document.getElementById('enhNote');
-  btn.disabled = true; spin.style.display = 'inline-block';
-  note.textContent = 'Enhancing... ✨';
 
-  setTimeout(() => {
-    try {
-      const enhanced = localEnhance(currentSlug, document.getElementById('descTA').value, currentParsed);
-      document.getElementById('descTA').value = enhanced;
-      renderPreview(currentParsed, enhanced);
-      note.textContent = '✓ Enhanced! Edit if needed.';
-      toast('Description enhanced! ✨', 'ok');
-    } catch(e) {
-      note.textContent = 'Something went wrong 😅';
-    } finally {
-      btn.disabled = false; spin.style.display = 'none';
-    }
-  }, 350);
-}
-
-// Covers 20+ skill categories — pure JS, zero dependencies
-function localEnhance(name, currentDesc, parsed) {
-  const haystack = (name + ' ' + (parsed.body || '') + ' ' + (currentDesc || '')).toLowerCase();
-
-  const cats = [
-    [/spotify|music|playlist|track|playback|song/,         'play, pause, skip, or search Spotify music'],
-    [/github|git|repo|pull.request|issue|commit|branch/,   'manage GitHub repos, issues, or pull requests'],
-    [/notion|page|database|block|workspace/,               'create or update Notion pages and databases'],
-    [/slack|channel|dm/,                                 'send or read Slack messages and channels'],
-    [/stripe|payment|invoice|charge|subscription/,         'handle Stripe payments and invoices'],
-    [/gmail|email|inbox|send.*mail/,                       'send, read, or manage emails'],
-    [/google.calendar|calendar|event|schedule/,            'create or manage calendar events'],
-    [/jira|ticket|sprint|atlassian/,                       'create or update Jira tickets and sprints'],
-    [/linear|cycle|project.issue/,                         'manage Linear issues and cycles'],
-    [/postgres|mysql|sql|database|query|db/,             'run SQL queries or interact with databases'],
-    [/web.search|tavily|exa|browse|scrape/,              'search the web or scrape content from URLs'],
-    [/twitter|tweet|x\.com/,                              'post or read tweets and social content'],
-    [/file|upload|download|convert|pdf|xlsx/,              'work with files and document conversions'],
-    [/docker|container|kubernetes|k8s/,                    'manage Docker containers or Kubernetes'],
-    [/aws|s3|lambda|ec2|gcp|azure/,                        'interact with cloud services'],
-    [/shopify|product|order|ecommerce/,                    'manage Shopify products and orders'],
-    [/discord|server|bot|webhook/,                         'send Discord messages or manage servers'],
-    [/figma|design|wireframe/,                             'inspect Figma designs and components'],
-    [/asana|trello|task|todo/,                             'manage tasks and projects'],
-    [/api|endpoint|rest|curl|http/,                        'make API calls or HTTP requests'],
-    [/bash|shell|terminal|cli|script/,                     'run terminal commands and shell scripts'],
-  ];
-
-  const match = cats.find(([re]) => re.test(haystack));
-  let desc = match
-    ? `Use when asked to ${match[1]}. `
-    : `Use for ${name.replace(/[-_]/g,' ')} tasks. `;
-
-  const orig = (currentDesc || '').trim();
-  if (orig && orig.length > 10) desc += orig.endsWith('.') ? orig : orig + '.';
-  if (parsed.requiresBins?.length) desc += ` Requires ${parsed.requiresBins.slice(0,2).join(' or ')}.`;
-  if (parsed.requiresEnv?.length)  desc += ` Needs ${parsed.requiresEnv.slice(0,2).join(', ')} env var${parsed.requiresEnv.length > 1 ? 's' : ''}.`;
-
-  return desc.trim().slice(0, 280);
-}
 
 // ── UTILS ──────────────────────────────────────────────────────────────
 function esc(s) {
