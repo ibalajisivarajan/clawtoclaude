@@ -5,35 +5,35 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ClawToClaude 🦞→🤖 — ClawHub Skill Converter</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com/)">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Mono:wght@400;500&family=Pacifico&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
 :root {
-  --sand:    #fdf6e9;
-  --sand2:   #f5ead6;
-  --sand3:   #ecdcc0;
-  --shore:   #e8d5b0;
-  --coral:   #ff6b6b;
-  --coral2:  #ff8e53;
-  --teal:    #0bbfa3;
-  --teal2:   #09a88e;
-  --teal3:   #077a68;
-  --sky:     #4ecdc4;
-  --sky2:    #3db8b0;
-  --gold:    #f7a800;
-  --ink:     #2d3436;
-  --ink2:    #4a5568;
-  --ink3:    #718096;
-  --white:   #ffffff;
-  --shadow:  rgba(45,52,54,0.08);
-  --shadow2: rgba(45,52,54,0.15);
-  --fun:   'Nunito', sans-serif;
-  --pac:   'Pacifico', cursive;
-  --mono:  'DM Mono', monospace;
+--sand:    #fdf6e9;
+--sand2:   #f5ead6;
+--sand3:   #ecdcc0;
+--shore:   #e8d5b0;
+--coral:   #ff6b6b;
+--coral2:  #ff8e53;
+--teal:    #0bbfa3;
+--teal2:   #09a88e;
+--teal3:   #077a68;
+--sky:     #4ecdc4;
+--sky2:    #3db8b0;
+--gold:    #f7a800;
+--ink:     #2d3436;
+--ink2:    #4a5568;
+--ink3:    #718096;
+--white:   #ffffff;
+--shadow:  rgba(45,52,54,0.08);
+--shadow2: rgba(45,52,54,0.15);
+--fun:   'Nunito', sans-serif;
+--pac:   'Pacifico', cursive;
+--mono:  'DM Mono', monospace;
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+- , *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
 body {
@@ -60,7 +60,7 @@ z-index: 0;
 body::after {
 content: ‘’;
 position: fixed; inset: 0;
-background-image: url(“data:image/svg+xml,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ width=‘300’ height=‘300’%3E%3Cfilter id=‘n’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.75’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘300’ height=‘300’ filter=‘url(%23n)’ opacity=‘0.025’/%3E%3C/svg%3E”);
+background-image: url(“data:image/svg+xml,%3Csvg xmlns=‘[http://www.w3.org/2000/svg’](http://www.w3.org/2000/svg%E2%80%99) width=‘300’ height=‘300’%3E%3Cfilter id=‘n’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.75’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘300’ height=‘300’ filter=‘url(%23n)’ opacity=‘0.025’/%3E%3C/svg%3E”);
 pointer-events: none; z-index: 0; opacity: 0.6;
 }
 
@@ -714,10 +714,10 @@ font-size: 13px; font-weight: 700;
 
 <div class="wrap">
 
-  <!-- ── HERO ── -->
+<!-- ── HERO ── -->
 
-  <div class="hero">
-    <div class="hero-pill">🌊 &nbsp;ClawHub → Claude.ai · Zero Setup · Instant Download</div>
+<div class="hero">
+<div class="hero-pill">🌊  ClawHub → [Claude.ai](http://claude.ai/) · Zero Setup · Instant Download</div>
 
 ```
 <div class="hero-title">
@@ -751,44 +751,44 @@ font-size: 13px; font-weight: 700;
 </div>
 ```
 
-  </div>
+</div>
 
-  <div class="wave-div">〰〰〰〰〰〰〰〰〰〰〰〰</div>
+<div class="wave-div">〰〰〰〰〰〰〰〰〰〰〰〰</div>
 
-  <!-- ── ACTION ROW ── -->
+<!-- ── ACTION ROW ── -->
 
-  <div class="action-row">
-    <span class="action-label">Find skills to convert on ClawHub →</span>
-    <a href="https://clawhub.ai" target="_blank" class="btn-browse">
-      🦞 Browse ClawHub
-    </a>
-  </div>
+<div class="action-row">
+<span class="action-label">Find skills to convert on ClawHub →</span>
+<a href="[https://clawhub.ai](https://clawhub.ai/)" target="_blank" class="btn-browse">
+🦞 Browse ClawHub
+</a>
+</div>
 
-  <!-- ── UPLOAD (always visible, no tabs) ── -->
+<!-- ── UPLOAD (always visible, no tabs) ── -->
 
-  <div class="sec-label">Drop your ClawHub .skill zip</div>
+<div class="sec-label">Drop your ClawHub .skill zip</div>
 
-  <div class="drop-zone" id="dropZone">
-    <input type="file" accept=".zip,.skill" id="fileInput" onchange="handleFile(this.files[0])">
-    <span class="drop-icon">🦞</span>
-    <div class="drop-title">Haul Your Skill Aboard!</div>
-    <div class="drop-sub">
-      Drag & drop or click to grab your zip<br>
-      Accepts <code>.skill</code> and <code>.zip</code> files from ClawHub
-    </div>
-  </div>
+<div class="drop-zone" id="dropZone">
+<input type="file" accept=".zip,.skill" id="fileInput" onchange="handleFile(this.files[0])">
+<span class="drop-icon">🦞</span>
+<div class="drop-title">Haul Your Skill Aboard!</div>
+<div class="drop-sub">
+Drag & drop or click to grab your zip<br>
+Accepts <code>.skill</code> and <code>.zip</code> files from ClawHub
+</div>
+</div>
 
-  <!-- Result card -->
+<!-- Result card -->
 
-  <div class="result-card" id="resultCard">
-    <div class="rc-header">
-      <div>
-        <div class="rc-name" id="rcName">—</div>
-        <div class="rc-meta" id="rcMeta">—</div>
-      </div>
-      <div id="rcBadge"></div>
-    </div>
-    <div class="rc-body">
+<div class="result-card" id="resultCard">
+<div class="rc-header">
+<div>
+<div class="rc-name" id="rcName">—</div>
+<div class="rc-meta" id="rcMeta">—</div>
+</div>
+<div id="rcBadge"></div>
+</div>
+<div class="rc-body">
 
 ```
   <div class="compat-box" id="compatBox">
@@ -816,15 +816,15 @@ font-size: 13px; font-weight: 700;
 </div>
 ```
 
-  </div>
+</div>
 
-  <!-- ── HOW IT WORKS ── -->
+<!-- ── HOW IT WORKS ── -->
 
-  <div class="how-section">
-    <div class="how-header">
-      <div class="how-eyebrow">How it works</div>
-      <div class="how-heading">How it works 🌴</div>
-    </div>
+<div class="how-section">
+<div class="how-header">
+<div class="how-eyebrow">How it works</div>
+<div class="how-heading">How it works 🌴</div>
+</div>
 
 ```
 <div class="steps">
@@ -832,7 +832,7 @@ font-size: 13px; font-weight: 700;
     <div class="step-num">1</div>
     <div class="step-content">
       <div class="step-title">Find a Skill on ClawHub</div>
-      <div class="step-body">Browse <a href="https://clawhub.ai" target="_blank" style="color:var(--teal);font-weight:700">clawhub.ai</a>, find a skill you want, and download the <code>.zip</code>. Then drop it here — everything converts in your browser, no server needed.</div>
+      <div class="step-body">Browse <a href="<https://clawhub.ai>" target="_blank" style="color:var(--teal);font-weight:700">clawhub.ai</a>, find a skill you want, and download the <code>.zip</code>. Then drop it here — everything converts in your browser, no server needed.</div>
     </div>
     <div class="step-emoji">📦</div>
   </div>
@@ -863,16 +863,16 @@ font-size: 13px; font-weight: 700;
 </div>
 ```
 
-  </div>
+</div>
 
-  <footer>
-    <div class="footer-brand">🦞 ClawToClaude</div>
-    <div class="footer-links">
-      <a href="https://github.com/ibalajisivarajan/clawtoclaude" target="_blank">GitHub</a>
-      <a href="https://clawhub.ai" target="_blank">ClawHub</a>
-      <a href="https://claude.ai" target="_blank">Claude.ai</a>
-    </div>
-  </footer>
+<footer>
+<div class="footer-brand">🦞 ClawToClaude</div>
+<div class="footer-links">
+<a href="https://github.com/ibalajisivarajan/clawtoclaude" target="_blank">GitHub</a>
+<a href="[https://clawhub.ai](https://clawhub.ai/)" target="_blank">ClawHub</a>
+<a href="[https://claude.ai](https://claude.ai/)" target="_blank">Claude.ai</a>
+</div>
+</footer>
 
 </div>
 
@@ -889,199 +889,199 @@ const dz = document.getElementById('dropZone');
 dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
 dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
 dz.addEventListener('drop', e => {
-  e.preventDefault(); dz.classList.remove('drag-over');
-  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+e.preventDefault(); dz.classList.remove('drag-over');
+if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
 });
 
 // ── FILE HANDLER ───────────────────────────────────────────────────────
 async function handleFile(file) {
-  if (!file) return;
-  // Reset file input so same file can be re-uploaded
-  document.getElementById('fileInput').value = '';
-  try {
-    const zip = await JSZip.loadAsync(file);
-    await processZip(zip, file.name.replace(/\.(zip|skill)$/i, ''));
-  } catch(e) { toast('Oops! Could not read that file 😅 — ' + e.message, 'err'); }
+if (!file) return;
+// Reset file input so same file can be re-uploaded
+document.getElementById('fileInput').value = '';
+try {
+const zip = await JSZip.loadAsync(file);
+await processZip(zip, file.name.replace(/\.(zip|skill)$/i, ''));
+} catch(e) { toast('Oops! Could not read that file 😅 — ' + e.message, 'err'); }
 }
 
 async function processZip(zip, hint) {
-  // Reset all state upfront so previous skill data never bleeds into new skill
-  currentZip   = null;
-  currentParsed = null;
-  currentSlug  = null;
-  document.getElementById('descTA').value = '';
-  document.getElementById('codePreview').textContent = '—';
-  document.getElementById('resultCard').classList.remove('visible');
-  document.getElementById('compatBox').classList.remove('visible');
+// Reset all state upfront so previous skill data never bleeds into new skill
+currentZip   = null;
+currentParsed = null;
+currentSlug  = null;
+document.getElementById('descTA').value = '';
+document.getElementById('codePreview').textContent = '—';
+document.getElementById('resultCard').classList.remove('visible');
+document.getElementById('compatBox').classList.remove('visible');
 
-  currentZip = zip;
-  const smFile = zip.file('SKILL.md') || zip.file(/SKILL\.md$/i)[0];
-  if (!smFile) { toast('No SKILL.md found in this zip 🤔', 'err'); return; }
+currentZip = zip;
+const smFile = zip.file('[SKILL.md](http://skill.md/)') || zip.file(/SKILL\.md$/i)[0];
+if (!smFile) { toast('No [SKILL.md](http://skill.md/) found in this zip 🤔', 'err'); return; }
 
-  const raw = await smFile.async('string');
-  const parsed = parseSkillMd(raw);
+const raw = await smFile.async('string');
+const parsed = parseSkillMd(raw);
 
-  let meta = null;
-  const mf = zip.file('_meta.json');
-  if (mf) { try { meta = JSON.parse(await mf.async('string')); } catch(e){} }
+let meta = null;
+const mf = zip.file('_meta.json');
+if (mf) { try { meta = JSON.parse(await mf.async('string')); } catch(e){} }
 
-  const slug = parsed.name || meta?.slug || hint || 'my-skill';
-  currentSlug = slug;
-  currentParsed = parsed;
+const slug = [parsed.name](http://parsed.name/) || meta?.slug || hint || 'my-skill';
+currentSlug = slug;
+currentParsed = parsed;
 
-  document.getElementById('rcName').textContent = slug;
-  const files = Object.keys(zip.files).filter(f => !f.endsWith('/')).join(', ');
-  document.getElementById('rcMeta').textContent = files + ' · v' + (meta?.version || '1.0.0');
-  document.getElementById('descTA').value = parsed.description || '';
-  document.getElementById('dlName').textContent = slug + '.skill';
+document.getElementById('rcName').textContent = slug;
+const files = Object.keys(zip.files).filter(f => !f.endsWith('/')).join(', ');
+document.getElementById('rcMeta').textContent = files + ' · v' + (meta?.version || '1.0.0');
+document.getElementById('descTA').value = parsed.description || '';
+document.getElementById('dlName').textContent = slug + '.skill';
 
-  renderPreview(parsed, parsed.description || '');
-  checkCompat(parsed);
-  document.getElementById('resultCard').classList.add('visible');
-  toast('✓ Skill loaded: ' + slug, 'ok');
+renderPreview(parsed, parsed.description || '');
+checkCompat(parsed);
+document.getElementById('resultCard').classList.add('visible');
+toast('✓ Skill loaded: ' + slug, 'ok');
 }
 
 // ── PARSER (bulletproof — handles ClawHub inline JSON metadata) ────────
 function parseSkillMd(raw) {
-  const fmMatch = raw.match(/^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(\r?\n|$)/);
-  if (!fmMatch) return { name: '', description: '', body: raw.trim(), requiresEnv: [], requiresBins: [] };
+const fmMatch = raw.match(/^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(\r?\n|$)/);
+if (!fmMatch) return { name: '', description: '', body: raw.trim(), requiresEnv: [], requiresBins: [] };
 
-  const block = fmMatch[1];
-  const body = raw.slice(fmMatch[0].length).trim();
-  const lines = block.split(/\r?\n/);
-  const fields = {};
-  let currentKey = null;
+const block = fmMatch[1];
+const body = raw.slice(fmMatch[0].length).trim();
+const lines = block.split(/\r?\n/);
+const fields = {};
+let currentKey = null;
 
-  for (const line of lines) {
-    const km = line.match(/^([a-zA-Z_][a-zA-Z0-9_-]*):\s*(.*)/);
-    if (km) { currentKey = km[1]; fields[currentKey] = [km[2]]; }
-    else if (currentKey && (line.startsWith(' ') || line.startsWith('\t') || line === '')) {
-      fields[currentKey].push(line);
-    }
-  }
+for (const line of lines) {
+const km = line.match(/^([a-zA-Z_][a-zA-Z0-9_-]*):\s*(.*)/);
+if (km) { currentKey = km[1]; fields[currentKey] = [km[2]]; }
+else if (currentKey && (line.startsWith(' ') || line.startsWith('\t') || line === '')) {
+fields[currentKey].push(line);
+}
+}
 
-  const getString = k => {
-    if (!fields[k]) return '';
-    const first = (fields[k][0] || '').trim();
-    if (/^"(.*)"$/.test(first)) return first.slice(1, -1).replace(/\\"/g, '"');
-    if (/^'(.*)'$/.test(first)) return first.slice(1, -1).replace(/''/g, "'");
-    if (/^[|>]/.test(first)) return fields[k].slice(1).map(l => l.replace(/^\s{0,4}/, '')).join('\n').trim();
-    return first;
-  };
+const getString = k => {
+if (!fields[k]) return '';
+const first = (fields[k][0] || '').trim();
+if (/^"(.*)"$/.test(first)) return first.slice(1, -1).replace(/\\"/g, '"');
+if (/^'(.*)'$/.test(first)) return first.slice(1, -1).replace(/''/g, "'");
+if (/^[|>]/.test(first)) return fields[k].slice(1).map(l => l.replace(/^\s{0,4}/, '')).join('\n').trim();
+return first;
+};
 
-  const rawMeta = (fields['metadata'] || []).join(' ');
-  const envs = [...rawMeta.matchAll(/"env"\s*:\s*\[([^\]]+)\]/g)]
-    .flatMap(m => m[1].split(',').map(s => s.trim().replace(/['"]/g, ''))).filter(Boolean);
-  const bins = [...rawMeta.matchAll(/"anyBins"\s*:\s*\[([^\]]+)\]/g),
-                ...rawMeta.matchAll(/"bins"\s*:\s*\[([^\]]+)\]/g)]
-    .flatMap(m => m[1].split(',').map(s => s.trim().replace(/['"]/g, ''))).filter(Boolean);
+const rawMeta = (fields['metadata'] || []).join(' ');
+const envs = [...rawMeta.matchAll(/"env"\s*:\s*\[([^\]]+)\]/g)]
+.flatMap(m => m[1].split(',').map(s => s.trim().replace(/['"]/g, ''))).filter(Boolean);
+const bins = [...rawMeta.matchAll(/"anyBins"\s*:\s*\[([^\]]+)\]/g),
+...rawMeta.matchAll(/"bins"\s*:\s*\[([^\]]+)\]/g)]
+.flatMap(m => m[1].split(',').map(s => s.trim().replace(/['"]/g, ''))).filter(Boolean);
 
-  return {
-    name: getString('name'),
-    description: getString('description'),
-    homepage: getString('homepage'),
-    compatibility: getString('compatibility'),
-    body,
-    requiresEnv: [...new Set(envs)],
-    requiresBins: [...new Set(bins)],
-  };
+return {
+name: getString('name'),
+description: getString('description'),
+homepage: getString('homepage'),
+compatibility: getString('compatibility'),
+body,
+requiresEnv: [...new Set(envs)],
+requiresBins: [...new Set(bins)],
+};
 }
 
 // ── COMPAT CHECK ───────────────────────────────────────────────────────
 function checkCompat(p) {
-  const warns = [];
-  if (p.requiresBins?.length)
-    warns.push('Requires CLI tools (install locally for Claude Code): ' + p.requiresBins.join(', ') + ' — only works in Claude Code (not Claude.ai chat)');
-  if (p.requiresEnv?.length)
-    warns.push('Needs env vars: ' + p.requiresEnv.join(', ') + ' — set these up before using');
-  if (/bash|shell|#!/i.test(p.body))
-    warns.push('Contains shell/bash commands — works in Claude Code, limited in Claude.ai chat');
+const warns = [];
+if (p.requiresBins?.length)
+warns.push('Requires CLI tools (install locally for Claude Code): ' + p.requiresBins.join(', ') + ' — only works in Claude Code (not [Claude.ai](http://claude.ai/) chat)');
+if (p.requiresEnv?.length)
+warns.push('Needs env vars: ' + p.requiresEnv.join(', ') + ' — set these up before using');
+if (/bash|shell|#!/i.test(p.body))
+warns.push('Contains shell/bash commands — works in Claude Code, limited in [Claude.ai](http://claude.ai/) chat');
 
-  const box = document.getElementById('compatBox');
-  const list = document.getElementById('compatList');
-  list.innerHTML = warns.map(w => `<div class="compat-item">${esc(w)}</div>`).join('');
+const box = document.getElementById('compatBox');
+const list = document.getElementById('compatList');
+list.innerHTML = warns.map(w => `<div class="compat-item">${esc(w)}</div>`).join('');
 
-  if (warns.length) {
-    box.classList.add('visible');
-    document.getElementById('rcBadge').innerHTML = '<span class="badge badge-warn">⚠ Check Compat</span>';
-  } else {
-    box.classList.remove('visible');
-    document.getElementById('rcBadge').innerHTML = '<span class="badge badge-ok">✓ Claude Ready!</span>';
-  }
+if (warns.length) {
+box.classList.add('visible');
+document.getElementById('rcBadge').innerHTML = '<span class="badge badge-warn">⚠ Check Compat</span>';
+} else {
+box.classList.remove('visible');
+document.getElementById('rcBadge').innerHTML = '<span class="badge badge-ok">✓ Claude Ready!</span>';
+}
 }
 
 // ── PREVIEW ────────────────────────────────────────────────────────────
 function renderPreview(p, desc) {
-  const md = buildClaudeMd(p, desc);
-  const hi = md
-    .replace(/^(---)/gm, '<span class="cc">$1</span>')
-    .replace(/^(name|description|compatibility)(:)/gm, '<span class="ck">$1</span><span class="cc">$2</span>')
-    .replace(/(?<=:\s)(.+)$/gm, '<span class="cv">$&</span>')
-    .replace(/^(#+ .+)$/gm, '<span style="color:#fbbf24">$1</span>');
-  document.getElementById('codePreview').innerHTML = hi.slice(0, 1000) + (md.length > 1000 ? '\n…' : '');
+const md = buildClaudeMd(p, desc);
+const hi = md
+.replace(/^(---)/gm, '<span class="cc">$1</span>')
+.replace(/^(name|description|compatibility)(:)/gm, '<span class="ck">$1</span><span class="cc">$2</span>')
+.replace(/(?<=:\s)(.+)$/gm, '<span class="cv">$&</span>')
+.replace(/^(#+ .+)$/gm, '<span style="color:#fbbf24">$1</span>');
+document.getElementById('codePreview').innerHTML = hi.slice(0, 1000) + (md.length > 1000 ? '\n…' : '');
 }
 
 document.getElementById('descTA').addEventListener('input', () => {
-  if (currentParsed) renderPreview(currentParsed, document.getElementById('descTA').value);
+if (currentParsed) renderPreview(currentParsed, document.getElementById('descTA').value);
 });
 
-// ── BUILD CLEAN SKILL.MD ───────────────────────────────────────────────
+// ── BUILD CLEAN [SKILL.MD](http://skill.md/) ───────────────────────────────────────────────
 // Reconstructs frontmatter from scratch — only Claude-safe fields.
 // Never passes raw ClawHub frontmatter through (prevents YAML errors).
 function buildClaudeMd(p, desc) {
-  const yamlStr = s => {
-    if (!s) return '""';
-    if (/^[a-zA-Z0-9 ,._\-\/()!?]+$/.test(s)) return s;
-    return '"' + s.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
-  };
-  const lines = [];
-  lines.push('name: ' + yamlStr(p.name || 'converted-skill'));
-  lines.push('description: ' + yamlStr(desc || p.description || ''));
-  if (p.compatibility) lines.push('compatibility: ' + yamlStr(p.compatibility));
-  return `---\n${lines.join('\n')}\n---\n\n${p.body || ''}`;
+const yamlStr = s => {
+if (!s) return '""';
+if (/^[a-zA-Z0-9 ,._\-\/()!?]+$/.test(s)) return s;
+return '"' + s.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
+};
+const lines = [];
+lines.push('name: ' + yamlStr([p.name](http://p.name/) || 'converted-skill'));
+lines.push('description: ' + yamlStr(desc || p.description || ''));
+if (p.compatibility) lines.push('compatibility: ' + yamlStr(p.compatibility));
+return `---\\n${lines.join('\\n')}\\n---\\n\\n${p.body || ''}`;
 }
 
 // ── DOWNLOAD ───────────────────────────────────────────────────────────
 async function downloadSkill() {
-  if (!currentZip || !currentParsed) {
-    toast('No skill loaded yet — upload a .skill zip first 😅', 'err');
-    return;
-  }
-  const desc  = document.getElementById('descTA').value;
-  const newMd = buildClaudeMd(currentParsed, desc);
+if (!currentZip || !currentParsed) {
+toast('No skill loaded yet — upload a .skill zip first 😅', 'err');
+return;
+}
+const desc  = document.getElementById('descTA').value;
+const newMd = buildClaudeMd(currentParsed, desc);
 
-  const out  = new JSZip();
-  const jobs = [];
-  currentZip.forEach((path, file) => {
-    if (file.dir || path === '_meta.json' || path === 'SKILL.md') return;
-    jobs.push(file.async('arraybuffer').then(d => out.file(path, d)));
-  });
-  await Promise.all(jobs);
-  out.file('SKILL.md', newMd);
+const out  = new JSZip();
+const jobs = [];
+currentZip.forEach((path, file) => {
+if (file.dir || path === '_meta.json' || path === '[SKILL.md](http://skill.md/)') return;
+jobs.push(file.async('arraybuffer').then(d => out.file(path, d)));
+});
+await Promise.all(jobs);
+out.file('[SKILL.md](http://skill.md/)', newMd);
 
-  const blob = await out.generateAsync({ type: 'blob', compression: 'DEFLATE' });
-  const a    = Object.assign(document.createElement('a'), {
-    href:     URL.createObjectURL(blob),
-    download: currentSlug + '.skill'
-  });
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
-  toast('Downloaded: ' + currentSlug + '.skill 🎉', 'ok');
+const blob = await out.generateAsync({ type: 'blob', compression: 'DEFLATE' });
+const a    = Object.assign(document.createElement('a'), {
+href:     URL.createObjectURL(blob),
+download: currentSlug + '.skill'
+});
+document.body.appendChild(a);
+a.click();
+setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+toast('Downloaded: ' + currentSlug + '.skill 🎉', 'ok');
 }
 
 // ── UTILS ──────────────────────────────────────────────────────────────
 function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+return String(s).replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>').replace(/"/g,'"');
 }
 
 function toast(msg, type = '') {
-  const bay = document.getElementById('toastBay');
-  const t = document.createElement('div');
-  t.className = 'toast ' + type;
-  t.textContent = msg;
-  bay.appendChild(t);
-  setTimeout(() => t.remove(), 3800);
+const bay = document.getElementById('toastBay');
+const t = document.createElement('div');
+t.className = 'toast ' + type;
+t.textContent = msg;
+bay.appendChild(t);
+setTimeout(() => t.remove(), 3800);
 }
 </script>
 
