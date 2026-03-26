@@ -168,49 +168,49 @@ body::after {
 }
 
 /* ── TABS ── */
-.tabs {
+.action-row {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   margin-bottom: 24px;
-}
-
-.tab-btn {
-  flex: 1;
-  padding: 14px 16px;
+  padding: 14px 20px;
   background: var(--white);
   border: 2px solid var(--sand3);
   border-radius: 16px;
-  font-family: var(--fun);
-  font-size: 14px;
-  font-weight: 800;
-  color: var(--ink3);
-  cursor: pointer;
-  transition: all 0.18s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
   box-shadow: 0 2px 8px var(--shadow);
 }
 
-.tab-btn:hover {
-  border-color: var(--teal);
-  color: var(--teal);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px var(--shadow2);
+.action-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink3);
 }
 
-.tab-btn.active {
+.btn-browse {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
   background: var(--teal);
-  border-color: var(--teal);
+  border-radius: 100px;
   color: var(--white);
-  box-shadow: 0 4px 20px rgba(11,191,163,0.35);
+  font-family: var(--fun);
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: all 0.18s ease;
+  box-shadow: 0 4px 14px rgba(11,191,163,0.3);
+  white-space: nowrap;
+}
+
+.btn-browse:hover {
+  background: var(--teal2);
   transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(11,191,163,0.4);
 }
 
 /* ── PANEL ── */
-.panel { display: none; }
-.panel.active { display: block; animation: popIn 0.22s ease; }
 @keyframes popIn {
   from { opacity: 0; transform: translateY(10px) scale(0.99); }
   to   { opacity: 1; transform: none; }
@@ -476,59 +476,9 @@ body::after {
 .btn-dl .dl-fname { font-size: 12px; font-weight: 600; opacity: 0.75; }
 
 /* ── SEARCH PANEL ── */
-.search-row { display: flex; gap: 10px; margin-bottom: 20px; }
 
-.search-input {
-  flex: 1;
-  background: var(--white);
-  border: 2px solid var(--sand3);
-  border-radius: 14px;
-  padding: 14px 18px;
-  font-family: var(--fun);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--ink);
-  outline: none;
-  transition: all 0.15s;
-  box-shadow: 0 2px 8px var(--shadow);
-}
-.search-input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(11,191,163,0.12); }
-.search-input::placeholder { color: var(--ink3); }
 
-.btn-search {
-  padding: 14px 24px;
-  background: var(--teal);
-  border: none;
-  border-radius: 14px;
-  color: white;
-  font-family: var(--fun);
-  font-size: 14px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all 0.18s;
-  white-space: nowrap;
-  box-shadow: 0 4px 16px rgba(11,191,163,0.3);
-}
-.btn-search:hover { background: var(--teal2); transform: translateY(-1px); }
-.btn-search:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-.search-helper {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ink3);
-  margin-bottom: 16px;
-  padding: 12px 16px;
-  background: var(--white);
-  border: 2px solid var(--sand3);
-  border-radius: 12px;
-  box-shadow: 0 2px 8px var(--shadow);
-}
-.search-helper a {
-  color: var(--teal);
-  text-decoration: none;
-  font-weight: 700;
-}
-.search-helper a:hover { text-decoration: underline; }
 
 /* Results */
 .results-list { display: flex; flex-direction: column; gap: 10px; }
@@ -799,9 +749,9 @@ footer {
     </div>
 
     <p class="hero-sub">
-      Drop any <span class="hl-coral">ClawHub skill zip</span>, get a
-      <span class="hl-teal">Claude-ready .skill file</span> in seconds.
-      No server, no signup, no drama. 🦞
+      Convert any <span class="hl-coral">ClawHub skill</span> to work with
+      <span class="hl-teal">Claude Code</span> the fastest way to extend
+      your AI agent
     </p>
 
     <div class="stat-row">
@@ -812,107 +762,79 @@ footer {
       </div>
       <div class="stat-chip">
         <span class="chip-emoji">⚡</span>
-        <span class="chip-num">0s</span>
-        <span>Conversion Time</span>
+        <span class="chip-num">Claude</span>
+        <span>Code Ready</span>
       </div>
       <div class="stat-chip">
-        <span class="chip-emoji">🌐</span>
+        <span class="chip-emoji">🔒</span>
         <span class="chip-num">100%</span>
-        <span>In Your Browser</span>
+        <span>Browser-Side</span>
       </div>
     </div>
   </div>
 
   <div class="wave-div">〰〰〰〰〰〰〰〰〰〰〰〰</div>
 
-  <!-- ── TABS ── -->
-  <div class="tabs">
-    <button class="tab-btn active" id="tab-upload" onclick="switchTab('upload')">
-      📦 Upload & Convert
-    </button>
-    <button class="tab-btn" id="tab-search" onclick="switchTab('search')">
-      🔍 Search ClawHub
-    </button>
+  <!-- ── ACTION ROW ── -->
+  <div class="action-row">
+    <span class="action-label">Find skills to convert on ClawHub →</span>
+    <a href="https://clawhub.ai" target="_blank" class="btn-browse">
+      🦞 Browse ClawHub
+    </a>
   </div>
 
-  <!-- ── UPLOAD PANEL ── -->
-  <div class="panel active" id="panel-upload">
-    <div class="sec-label">Drop your ClawHub .skill zip</div>
+  <!-- ── UPLOAD (always visible, no tabs) ── -->
+  <div class="sec-label">Drop your ClawHub .skill zip</div>
 
-    <div class="drop-zone" id="dropZone">
-      <input type="file" accept=".zip,.skill" id="fileInput" onchange="handleFile(this.files[0])">
-      <span class="drop-icon">🦞</span>
-      <div class="drop-title">Haul Your Skill Aboard!</div>
-      <div class="drop-sub">
-        Drag & drop or click to grab your zip<br>
-        Accepts <code>.skill</code> and <code>.zip</code> files from ClawHub
-      </div>
-    </div>
-
-    <!-- Result card -->
-    <div class="result-card" id="resultCard">
-      <div class="rc-header">
-        <div>
-          <div class="rc-name" id="rcName">—</div>
-          <div class="rc-meta" id="rcMeta">—</div>
-        </div>
-        <div id="rcBadge"></div>
-      </div>
-      <div class="rc-body">
-
-        <div class="compat-box" id="compatBox">
-          <div class="compat-head">⚠ Heads Up — Compatibility Notes</div>
-          <div id="compatList"></div>
-        </div>
-
-        <div class="field">
-          <div class="field-label">✏️ Claude Trigger Description</div>
-          <div class="field-box">
-            <textarea id="descTA" rows="3" placeholder="Description loads here..."></textarea>
-          </div>
-          <div class="enhance-row">
-            <button class="btn-enhance" id="enhBtn" onclick="enhanceDesc()">
-              <span class="spin" id="enhSpin" style="display:none"></span>
-              ✦ Enhance with Claude AI
-            </button>
-            <span class="enhance-note" id="enhNote">Uses Claude AI to rewrite for better triggering</span>
-          </div>
-        </div>
-
-        <div class="field">
-          <div class="field-label">👁 SKILL.md Preview</div>
-          <div class="code-preview" id="codePreview">—</div>
-        </div>
-
-        <button class="btn-dl" onclick="downloadSkill()">
-          ⬇️ Download Claude-Ready .skill
-          <span class="dl-fname" id="dlName"></span>
-        </button>
-      </div>
+  <div class="drop-zone" id="dropZone">
+    <input type="file" accept=".zip,.skill" id="fileInput" onchange="handleFile(this.files[0])">
+    <span class="drop-icon">🦞</span>
+    <div class="drop-title">Haul Your Skill Aboard!</div>
+    <div class="drop-sub">
+      Drag & drop or click to grab your zip<br>
+      Accepts <code>.skill</code> and <code>.zip</code> files from ClawHub
     </div>
   </div>
 
-  <!-- ── SEARCH PANEL ── -->
-  <div class="panel" id="panel-search">
-    <div class="sec-label">Search ClawHub registry</div>
-    <div class="search-row">
-      <input class="search-input" id="searchQ"
-        placeholder="e.g. github, spotify, notion, stripe, slack..."
-        onkeydown="if(event.key==='Enter')doSearch()">
-      <button class="btn-search" id="searchBtn" onclick="doSearch()">🔍 Search</button>
-    </div>
-    <div class="search-helper">
-      Can't find what you need? &nbsp;
-      <a href="https://clawhub.ai" target="_blank">Browse clawhub.ai directly →</a>
-      &nbsp;then download the zip and use the Upload tab.
-    </div>
-
-    <div class="results-list" id="resultsList">
-      <div class="empty-state">
-        <span class="e-icon">🦞</span>
-        Search for ClawHub skills — Claude AI will find them for you!
-        <div class="e-hint">Try: "github", "spotify", "notion", "stripe", "slack"</div>
+  <!-- Result card -->
+  <div class="result-card" id="resultCard">
+    <div class="rc-header">
+      <div>
+        <div class="rc-name" id="rcName">—</div>
+        <div class="rc-meta" id="rcMeta">—</div>
       </div>
+      <div id="rcBadge"></div>
+    </div>
+    <div class="rc-body">
+
+      <div class="compat-box" id="compatBox">
+        <div class="compat-head">⚠ Heads Up — Compatibility Notes</div>
+        <div id="compatList"></div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">✏️ Claude Trigger Description</div>
+        <div class="field-box">
+          <textarea id="descTA" rows="3" placeholder="Description loads here..."></textarea>
+        </div>
+        <div class="enhance-row">
+          <button class="btn-enhance" id="enhBtn" onclick="enhanceDesc()">
+            <span class="spin" id="enhSpin" style="display:none"></span>
+            ✦ Enhance Description
+          </button>
+          <span class="enhance-note" id="enhNote">Rewrites for better Claude triggering</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">👁 SKILL.md Preview</div>
+        <div class="code-preview" id="codePreview">—</div>
+      </div>
+
+      <button class="btn-dl" onclick="downloadSkill()">
+        ⬇️ Download Claude-Ready .skill
+        <span class="dl-fname" id="dlName"></span>
+      </button>
     </div>
   </div>
 
@@ -920,15 +842,15 @@ footer {
   <div class="how-section">
     <div class="how-header">
       <div class="how-eyebrow">How it works</div>
-      <div class="how-heading">Four Easy Steps 🌴</div>
+      <div class="how-heading">How it works 🌴</div>
     </div>
 
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
         <div class="step-content">
-          <div class="step-title">Grab the Zip</div>
-          <div class="step-body">Download any <code>.skill</code> from clawhub.ai and drop it here — or use the Search tab to find and fetch skills directly. No server needed, everything runs in your browser.</div>
+          <div class="step-title">Find a Skill on ClawHub</div>
+          <div class="step-body">Browse <a href="https://clawhub.ai" target="_blank" style="color:var(--teal);font-weight:700">clawhub.ai</a>, find a skill you want, and download the <code>.zip</code>. Then drop it here — everything converts in your browser, no server needed.</div>
         </div>
         <div class="step-emoji">📦</div>
       </div>
@@ -951,8 +873,8 @@ footer {
       <div class="step">
         <div class="step-num">4</div>
         <div class="step-content">
-          <div class="step-title">Install & Surf</div>
-          <div class="step-body">Download your fresh <code>.skill</code> file → Claude.ai → Settings → Skills → Upload. Done! Claude automatically loads it whenever it's relevant. 🤙</div>
+          <div class="step-title">Drop it into Claude Code</div>
+          <div class="step-body">Place the <code>.skill</code> file in your Claude Code workspace <code>skills/</code> folder — it's live instantly. For instruction-only skills (no CLI tools), you can also upload to Claude.ai Settings → Skills. 🤙</div>
         </div>
         <div class="step-emoji">🏄</div>
       </div>
@@ -977,14 +899,6 @@ footer {
 let currentZip = null;
 let currentParsed = null;
 let currentSlug = null;
-
-// ── TABS ───────────────────────────────────────────────────────────────
-function switchTab(t) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('tab-' + t).classList.add('active');
-  document.getElementById('panel-' + t).classList.add('active');
-}
 
 // ── DRAG & DROP ────────────────────────────────────────────────────────
 const dz = document.getElementById('dropZone');
@@ -1082,7 +996,7 @@ function parseSkillMd(raw) {
 function checkCompat(p) {
   const warns = [];
   if (p.requiresBins?.length)
-    warns.push('Needs CLI tools: ' + p.requiresBins.join(', ') + ' — only works in Claude Code (not Claude.ai chat)');
+    warns.push('Requires CLI tools (install locally for Claude Code): ' + p.requiresBins.join(', ') + ' — only works in Claude Code (not Claude.ai chat)');
   if (p.requiresEnv?.length)
     warns.push('Needs env vars: ' + p.requiresEnv.join(', ') + ' — set these up before using');
   if (/bash|shell|#!/i.test(p.body))
@@ -1161,10 +1075,6 @@ async function downloadSkill() {
   toast('Downloaded: ' + currentSlug + '.skill 🎉', 'ok');
 }
 
-// ── CLOUDFLARE WORKER PROXY ───────────────────────────────────────────
-// Your deployed worker URL — update after deploying the worker
-const PROXY = 'https://clawtoclaude-proxy.alabinnexus.workers.dev';
-
 // ── ENHANCE — 100% offline, works for everyone, no account needed ──────
 function enhanceDesc() {
   if (!currentParsed) return;
@@ -1229,206 +1139,6 @@ function localEnhance(name, currentDesc, parsed) {
 
   return desc.trim().slice(0, 280);
 }
-
-// ── FETCH LIVE SKILL COUNT ─────────────────────────────────────────────
-async function fetchSkillCount() {
-  try {
-    const res = await fetch(`${PROXY}/stats`, { signal: AbortSignal.timeout(4000) });
-    if (!res.ok) return;
-    const data = await res.json();
-    const count = data.skillCount || data.count || data.total || data.skills;
-    if (count && typeof count === 'number') {
-      const el = document.getElementById('skillCount');
-      if (el) el.textContent = count > 1000 ? Math.round(count/1000) + 'k+' : count + '+';
-    }
-  } catch(e) { /* silently keep the default */ }
-}
-
-// ── GITHUB-BASED SEARCH ────────────────────────────────────────────────
-// ClawHub's REST API requires Bearer token auth — can't call from browser.
-// Instead we use the awesome-openclaw-skills GitHub repo: a public,
-// CORS-free, always-updated index of 5400+ skills as plain text.
-// We fetch it once, cache it, then search locally — instant results.
-
-let skillIndexCache = null;
-let skillIndexFetching = false;
-
-async function loadSkillIndex() {
-  if (skillIndexCache) return skillIndexCache;
-  if (skillIndexFetching) {
-    await new Promise(r => setTimeout(r, 400));
-    return skillIndexCache;
-  }
-  skillIndexFetching = true;
-  try {
-    // Raw README — exact format: "skill-name - Description text here."
-    // One skill per line, alphabetically sorted
-    const res = await fetch(
-      'https://raw.githubusercontent.com/VoltAgent/awesome-openclaw-skills/refs/heads/main/README.md',
-      { signal: AbortSignal.timeout(10000) }
-    );
-    if (!res.ok) throw new Error('GitHub fetch failed: ' + res.status);
-    const text = await res.text();
-
-    const skills = [];
-    for (const line of text.split('\n')) {
-      // Match: "skill-name - Description" or "- skill-name - Description"
-      // The README has lines like: "agenticcreed-signup-lead - Create a signup lead..."
-      const m = line.match(/^(?:[-*]\s+)?([a-z][a-z0-9-]{1,80})\s+-\s+(.{8,300})$/);
-      if (!m) continue;
-      const name = m[1].trim();
-      const desc = m[2].trim().replace(/\s+/g, ' ');
-      // Skip section headers, URLs, or things that look wrong
-      if (name.includes('http') || desc.startsWith('[') || desc.startsWith('(')) continue;
-      skills.push({ name, description: desc, stars: '?', downloads: '?', version: 'latest' });
-    }
-
-    console.log('ClawToClaude: loaded', skills.length, 'skills from index');
-    skillIndexCache = skills;
-    return skills;
-  } catch(e) {
-    console.warn('ClawToClaude: skill index load failed:', e.message);
-    skillIndexFetching = false;
-    return null;
-  }
-}
-
-async function trySearch(q) {
-  const ql = q.toLowerCase().trim();
-  if (!ql) return [];
-
-  // Try GitHub index first
-  const index = await loadSkillIndex();
-  if (index && index.length > 0) {
-    // Score each skill: exact name match > name contains > description contains
-    const scored = index
-      .map(s => {
-        const name = s.name.toLowerCase();
-        const desc = s.description.toLowerCase();
-        let score = 0;
-        if (name === ql)             score = 100;
-        else if (name.startsWith(ql)) score = 80;
-        else if (name.includes(ql))  score = 60;
-        else if (desc.includes(ql))  score = 40;
-        // Also check individual words in query
-        const words = ql.split(/\s+/);
-        for (const w of words) {
-          if (w.length > 2) {
-            if (name.includes(w)) score = Math.max(score, 50);
-            if (desc.includes(w)) score = Math.max(score, 30);
-          }
-        }
-        return { ...s, score };
-      })
-      .filter(s => s.score > 0)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 10);
-
-    if (scored.length > 0) return scored;
-  }
-
-  // Fallback to curated list
-  return [];
-}
-
-// ── SEARCH via Cloudflare Worker Proxy ─────────────────────────────────
-async function doSearch() {
-  const q    = document.getElementById('searchQ').value.trim();
-  if (!q) return;
-  const btn  = document.getElementById('searchBtn');
-  const list = document.getElementById('resultsList');
-  btn.disabled = true; btn.textContent = '🔍 Searching...';
-  list.innerHTML = `<div class="empty-state"><span class="e-icon">⏳</span>Loading skill index...</div>`;
-
-  try {
-    // Try search endpoint first, then browse as fallback
-    let skills = await trySearch(q);
-
-    if (!skills.length) {
-      list.innerHTML = `<div class="empty-state"><span class="e-icon">🤷</span>No results for "<strong>${esc(q)}</strong>"<div class="e-hint">Try: github, spotify, notion, stripe, slack</div></div>`;
-      return;
-    }
-    renderSkills(skills);
-
-  } catch(e) {
-    // Proxy down or CORS issue — show curated fallback
-    const fallback = getCuratedSkills(q);
-    renderSkills(fallback);
-    toast('Showing popular skills — try a broader search term 🔍', '');
-  } finally {
-    btn.disabled = false; btn.textContent = '🔍 Search';
-  }
-}
-
-// Curated fallback — shown until proxy is deployed
-function getCuratedSkills(q) {
-  const all = [
-    { name: 'github-issues',     description: 'Manage GitHub issues, pull requests, and repos.',        stars: 342, downloads: 8200,  version: '1.2.0' },
-    { name: 'spotify-player',    description: 'Control Spotify playback and search tracks via CLI.',    stars: 218, downloads: 5100,  version: '1.0.0' },
-    { name: 'notion-manager',    description: 'Create and update Notion pages and databases.',          stars: 291, downloads: 7800,  version: '2.0.0' },
-    { name: 'slack-messenger',   description: 'Send messages and manage Slack channels.',               stars: 187, downloads: 4300,  version: '1.1.0' },
-    { name: 'stripe-payments',   description: 'Handle Stripe payments, invoices, and subscriptions.',  stars: 156, downloads: 3900,  version: '1.0.2' },
-    { name: 'tavily-web-search', description: 'AI-optimised web search via the Tavily API.',           stars: 489, downloads: 12400, version: '1.3.0' },
-    { name: 'gmail-manager',     description: 'Read, send, and organise Gmail messages.',              stars: 203, downloads: 5600,  version: '1.1.0' },
-    { name: 'google-calendar',   description: 'Create and manage Google Calendar events.',             stars: 178, downloads: 4100,  version: '1.0.1' },
-    { name: 'postgres-query',    description: 'Run SQL queries against PostgreSQL databases.',          stars: 134, downloads: 3200,  version: '1.0.0' },
-    { name: 'jira-tasks',        description: 'Create and update Jira issues and sprint boards.',      stars: 142, downloads: 3500,  version: '1.2.0' },
-    { name: 'linear-issues',     description: 'Manage Linear issues, cycles, and projects.',           stars: 98,  downloads: 2800,  version: '1.0.0' },
-    { name: 'discord-bot',       description: 'Send Discord messages and manage server channels.',     stars: 167, downloads: 4900,  version: '1.1.0' },
-    { name: 'shopify-store',     description: 'Manage Shopify products, orders, and customers.',       stars: 89,  downloads: 2100,  version: '1.0.1' },
-    { name: 'aws-s3',            description: 'Upload, download, and manage AWS S3 files.',            stars: 112, downloads: 3100,  version: '1.0.0' },
-    { name: 'docker-manager',    description: 'Build, run, and manage Docker containers.',            stars: 143, downloads: 3700,  version: '1.2.0' },
-    { name: 'twitter-poster',    description: 'Post tweets and read Twitter/X timelines.',            stars: 76,  downloads: 1900,  version: '1.0.0' },
-    { name: 'figma-inspector',   description: 'Inspect Figma files, components, and design tokens.',  stars: 94,  downloads: 2400,  version: '1.0.0' },
-    { name: 'asana-tasks',       description: 'Create and manage Asana tasks and projects.',          stars: 88,  downloads: 2200,  version: '1.0.1' },
-  ];
-  const ql = q.toLowerCase();
-  const filtered = all.filter(s => s.name.includes(ql) || s.description.toLowerCase().includes(ql));
-  return filtered.length ? filtered : all.slice(0, 8);
-}
-
-function renderSkills(skills) {
-  const list = document.getElementById('resultsList');
-  list.innerHTML = '';
-  skills.forEach((s, i) => {
-    const name = s.name || s.slug || 'unknown';
-    const desc = s.description || s.summary || '—';
-    const stars = s.stars ?? s.starCount ?? '?';
-    const dl = s.downloads ?? s.downloadCount ?? '?';
-    const ver = s.latestVersion || s.version || 'latest';
-
-    const card = document.createElement('div');
-    card.className = 'skill-card'; card.id = 'sk-' + i;
-    card.innerHTML = `
-      <div style="flex:1;min-width:0">
-        <div class="sk-name">${esc(name)}</div>
-        <div class="sk-desc">${esc(desc)}</div>
-        <div class="sk-stats"><span>⭐ ${stars}</span><span>⬇ ${dl}</span><span>v${esc(String(ver))}</span></div>
-      </div>
-      <button class="btn-reel" onclick="reelIn('${esc(name)}','${esc(String(ver))}',${i})">Convert →</button>`;
-    list.appendChild(card);
-  });
-}
-
-async function reelIn(slug, ver, idx) {
-  const btn = document.querySelector(`#sk-${idx} .btn-reel`);
-  btn.textContent = '⏳ Fetching...'; btn.classList.add('loading'); btn.disabled = true;
-  try {
-    const v = ver && ver !== '—' ? ver : 'latest';
-    const res = await fetch(`https://clawhub.ai/api/v1/download/${slug}/${v}`, { signal: AbortSignal.timeout(10000) });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const zip = await JSZip.loadAsync(await res.blob());
-    switchTab('upload');
-    await processZip(zip, slug);
-    btn.textContent = '✓ Done!'; btn.classList.remove('loading'); btn.classList.add('done');
-  } catch(e) {
-    btn.textContent = 'Failed 😅'; btn.classList.remove('loading'); btn.disabled = false;
-    toast('Download failed — try manual upload', 'err');
-  }
-}
-
-// Fetch live count on load
-fetchSkillCount();
 
 // ── UTILS ──────────────────────────────────────────────────────────────
 function esc(s) {
