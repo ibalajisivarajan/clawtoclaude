@@ -1,431 +1,453 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ClawToClaude 🦞→🤖 — ClawHub Skill Converter</title>
-<link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com/)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Mono:wght@400;500&family=Pacifico&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
 :root {
---sand:    #fdf6e9;
---sand2:   #f5ead6;
---sand3:   #ecdcc0;
---shore:   #e8d5b0;
---coral:   #ff6b6b;
---coral2:  #ff8e53;
---teal:    #0bbfa3;
---teal2:   #09a88e;
---teal3:   #077a68;
---sky:     #4ecdc4;
---sky2:    #3db8b0;
---gold:    #f7a800;
---ink:     #2d3436;
---ink2:    #4a5568;
---ink3:    #718096;
---white:   #ffffff;
---shadow:  rgba(45,52,54,0.08);
---shadow2: rgba(45,52,54,0.15);
---fun:   'Nunito', sans-serif;
---pac:   'Pacifico', cursive;
---mono:  'DM Mono', monospace;
+  --sand:    #fdf6e9;
+  --sand2:   #f5ead6;
+  --sand3:   #ecdcc0;
+  --shore:   #e8d5b0;
+  --coral:   #ff6b6b;
+  --coral2:  #ff8e53;
+  --teal:    #0bbfa3;
+  --teal2:   #09a88e;
+  --teal3:   #077a68;
+  --sky:     #4ecdc4;
+  --sky2:    #3db8b0;
+  --gold:    #f7a800;
+  --ink:     #2d3436;
+  --ink2:    #4a5568;
+  --ink3:    #718096;
+  --white:   #ffffff;
+  --shadow:  rgba(45,52,54,0.08);
+  --shadow2: rgba(45,52,54,0.15);
+  --fun:   'Nunito', sans-serif;
+  --pac:   'Pacifico', cursive;
+  --mono:  'DM Mono', monospace;
 }
 
-- , *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
 body {
-background: var(–sand);
-color: var(–ink);
-font-family: var(–fun);
-min-height: 100vh;
-overflow-x: hidden;
+  background: var(--sand);
+  color: var(--ink);
+  font-family: var(--fun);
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 /* ── SANDY BACKGROUND TEXTURE ── */
 body::before {
-content: ‘’;
-position: fixed; inset: 0;
-background-image:
-radial-gradient(ellipse 60% 40% at 10% 90%, rgba(255,107,107,0.08) 0%, transparent 60%),
-radial-gradient(ellipse 50% 60% at 90% 10%, rgba(11,191,163,0.10) 0%, transparent 60%),
-radial-gradient(ellipse 70% 30% at 50% 50%, rgba(247,168,0,0.04) 0%, transparent 70%);
-pointer-events: none;
-z-index: 0;
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    radial-gradient(ellipse 60% 40% at 10% 90%, rgba(255,107,107,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 90% 10%, rgba(11,191,163,0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 30% at 50% 50%, rgba(247,168,0,0.04) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* Subtle grain */
 body::after {
-content: ‘’;
-position: fixed; inset: 0;
-background-image: url(“data:image/svg+xml,%3Csvg xmlns=‘[http://www.w3.org/2000/svg’](http://www.w3.org/2000/svg%E2%80%99) width=‘300’ height=‘300’%3E%3Cfilter id=‘n’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.75’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘300’ height=‘300’ filter=‘url(%23n)’ opacity=‘0.025’/%3E%3C/svg%3E”);
-pointer-events: none; z-index: 0; opacity: 0.6;
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: 0.6;
 }
 
 .wrap {
-position: relative; z-index: 1;
-max-width: 860px;
-margin: 0 auto;
-padding: 0 24px 120px;
+  position: relative; z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 24px 120px;
 }
 
 /* ── HERO ── */
 .hero {
-padding: 56px 0 48px;
-text-align: center;
+  padding: 56px 0 48px;
+  text-align: center;
 }
 
 .hero-pill {
-display: inline-flex;
-align-items: center;
-gap: 8px;
-background: var(–white);
-border: 2px solid var(–sand3);
-border-radius: 100px;
-padding: 7px 18px;
-font-size: 12px;
-font-weight: 700;
-color: var(–ink3);
-letter-spacing: 0.5px;
-margin-bottom: 28px;
-box-shadow: 0 2px 8px var(–shadow);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--white);
+  border: 2px solid var(--sand3);
+  border-radius: 100px;
+  padding: 7px 18px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink3);
+  letter-spacing: 0.5px;
+  margin-bottom: 28px;
+  box-shadow: 0 2px 8px var(--shadow);
 }
 
 /* Big playful title */
 .hero-title {
-display: flex;
-align-items: center;
-justify-content: center;
-gap: 12px;
-flex-wrap: wrap;
-margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
 }
 
 .hero-word {
-font-family: var(–pac);
-font-size: clamp(44px, 9vw, 84px);
-line-height: 1;
-letter-spacing: -1px;
+  font-family: var(--pac);
+  font-size: clamp(44px, 9vw, 84px);
+  line-height: 1;
+  letter-spacing: -1px;
 }
 
-.hero-word.w-claw { color: var(–coral); }
+.hero-word.w-claw { color: var(--coral); }
 .hero-word.w-arrow {
-font-family: var(–fun);
-font-size: clamp(28px, 5vw, 48px);
-font-weight: 900;
-color: var(–ink3);
-padding-top: 8px;
+  font-family: var(--fun);
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 900;
+  color: var(--ink3);
+  padding-top: 8px;
 }
-.hero-word.w-claude { color: var(–teal); }
+.hero-word.w-claude { color: var(--teal); }
 
 .hero-sub {
-font-size: 17px;
-font-weight: 600;
-color: var(–ink2);
-line-height: 1.6;
-max-width: 560px;
-margin: 0 auto 36px;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink2);
+  line-height: 1.6;
+  max-width: 560px;
+  margin: 0 auto 36px;
 }
 
-.hero-sub .hl-coral { color: var(–coral2); }
-.hero-sub .hl-teal  { color: var(–teal);  }
+.hero-sub .hl-coral { color: var(--coral2); }
+.hero-sub .hl-teal  { color: var(--teal);  }
 
 /* Stat chips row */
 .stat-row {
-display: flex;
-justify-content: center;
-gap: 12px;
-flex-wrap: wrap;
-margin-bottom: 8px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
 }
 
 .stat-chip {
-background: var(–white);
-border: 2px solid var(–sand3);
-border-radius: 100px;
-padding: 8px 20px;
-display: flex;
-align-items: center;
-gap: 8px;
-font-size: 14px;
-font-weight: 700;
-color: var(–ink2);
-box-shadow: 0 2px 8px var(–shadow);
+  background: var(--white);
+  border: 2px solid var(--sand3);
+  border-radius: 100px;
+  padding: 8px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink2);
+  box-shadow: 0 2px 8px var(--shadow);
 }
 
-.stat-chip .chip-num { font-size: 18px; color: var(–teal); }
+.stat-chip .chip-num { font-size: 18px; color: var(--teal); }
 .stat-chip .chip-emoji { font-size: 16px; }
 
 /* ── WAVE DIVIDER ── */
 .wave-div {
-text-align: center;
-font-size: 22px;
-margin: 8px 0 28px;
-letter-spacing: 4px;
-opacity: 0.35;
-user-select: none;
+  text-align: center;
+  font-size: 22px;
+  margin: 8px 0 28px;
+  letter-spacing: 4px;
+  opacity: 0.35;
+  user-select: none;
 }
 
 /* ── TABS ── */
 .action-row {
-display: flex;
-align-items: center;
-justify-content: space-between;
-gap: 16px;
-margin-bottom: 24px;
-padding: 14px 20px;
-background: var(–white);
-border: 2px solid var(–sand3);
-border-radius: 16px;
-box-shadow: 0 2px 8px var(–shadow);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 14px 20px;
+  background: var(--white);
+  border: 2px solid var(--sand3);
+  border-radius: 16px;
+  box-shadow: 0 2px 8px var(--shadow);
 }
 
 .action-label {
-font-size: 14px;
-font-weight: 700;
-color: var(–ink3);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink3);
 }
 
 .btn-browse {
-display: inline-flex;
-align-items: center;
-gap: 8px;
-padding: 10px 22px;
-background: var(–teal);
-border-radius: 100px;
-color: var(–white);
-font-family: var(–fun);
-font-size: 14px;
-font-weight: 800;
-text-decoration: none;
-transition: all 0.18s ease;
-box-shadow: 0 4px 14px rgba(11,191,163,0.3);
-white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  background: var(--teal);
+  border-radius: 100px;
+  color: var(--white);
+  font-family: var(--fun);
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: all 0.18s ease;
+  box-shadow: 0 4px 14px rgba(11,191,163,0.3);
+  white-space: nowrap;
 }
 
 .btn-browse:hover {
-background: var(–teal2);
-transform: translateY(-1px);
-box-shadow: 0 6px 20px rgba(11,191,163,0.4);
+  background: var(--teal2);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(11,191,163,0.4);
 }
 
 /* ── PANEL ── */
 @keyframes popIn {
-from { opacity: 0; transform: translateY(10px) scale(0.99); }
-to   { opacity: 1; transform: none; }
+  from { opacity: 0; transform: translateY(10px) scale(0.99); }
+  to   { opacity: 1; transform: none; }
 }
 
 /* ── SECTION LABEL ── */
 .sec-label {
-font-size: 11px;
-font-weight: 800;
-letter-spacing: 2px;
-text-transform: uppercase;
-color: var(–ink3);
-margin-bottom: 12px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: 12px;
 }
 
 /* ── DROP ZONE ── */
 .drop-zone {
-background: var(–white);
-border: 3px dashed var(–sand3);
-border-radius: 24px;
-padding: 64px 32px;
-text-align: center;
-cursor: pointer;
-transition: all 0.2s ease;
-position: relative;
-box-shadow: 0 4px 24px var(–shadow);
+  background: var(--white);
+  border: 3px dashed var(--sand3);
+  border-radius: 24px;
+  padding: 64px 32px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  box-shadow: 0 4px 24px var(--shadow);
 }
 
-.drop-zone input[type=“file”] {
-position: absolute; inset: 0;
-opacity: 0; cursor: pointer;
-width: 100%; height: 100%;
+.drop-zone input[type="file"] {
+  position: absolute; inset: 0;
+  opacity: 0; cursor: pointer;
+  width: 100%; height: 100%;
 }
 
 .drop-zone:hover, .drop-zone.drag-over {
-border-color: var(–teal);
-background: rgba(11,191,163,0.04);
-box-shadow: 0 8px 40px rgba(11,191,163,0.15);
-transform: translateY(-2px);
+  border-color: var(--teal);
+  background: rgba(11,191,163,0.04);
+  box-shadow: 0 8px 40px rgba(11,191,163,0.15);
+  transform: translateY(-2px);
 }
 
 .drop-icon {
-font-size: 56px;
-display: block;
-margin-bottom: 16px;
-animation: wobble 3s ease-in-out infinite;
+  font-size: 56px;
+  display: block;
+  margin-bottom: 16px;
+  animation: wobble 3s ease-in-out infinite;
 }
 
 @keyframes wobble {
-0%, 100% { transform: rotate(-5deg) scale(1); }
-50%       { transform: rotate(5deg) scale(1.08); }
+  0%, 100% { transform: rotate(-5deg) scale(1); }
+  50%       { transform: rotate(5deg) scale(1.08); }
 }
 
 .drop-title {
-font-family: var(–fun);
-font-size: 22px;
-font-weight: 900;
-color: var(–ink);
-margin-bottom: 8px;
+  font-family: var(--fun);
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--ink);
+  margin-bottom: 8px;
 }
 
 .drop-sub {
-font-size: 14px;
-color: var(–ink3);
-font-weight: 600;
-line-height: 1.6;
+  font-size: 14px;
+  color: var(--ink3);
+  font-weight: 600;
+  line-height: 1.6;
 }
 
 .drop-sub code {
-font-family: var(–mono);
-background: var(–sand2);
-border: 1px solid var(–sand3);
-padding: 2px 7px;
-border-radius: 6px;
-font-size: 12px;
-color: var(–ink2);
+  font-family: var(--mono);
+  background: var(--sand2);
+  border: 1px solid var(--sand3);
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--ink2);
 }
 
 /* ── RESULT CARD ── */
 .result-card {
-display: none;
-background: var(–white);
-border: 2px solid var(–sand3);
-border-radius: 24px;
-overflow: hidden;
-margin-top: 20px;
-box-shadow: 0 4px 24px var(–shadow);
-animation: popIn 0.25s ease;
+  display: none;
+  background: var(--white);
+  border: 2px solid var(--sand3);
+  border-radius: 24px;
+  overflow: hidden;
+  margin-top: 20px;
+  box-shadow: 0 4px 24px var(--shadow);
+  animation: popIn 0.25s ease;
 }
 .result-card.visible { display: block; }
 
 .rc-header {
-background: linear-gradient(135deg, var(–teal) 0%, var(–sky) 100%);
-padding: 20px 24px;
-display: flex;
-align-items: center;
-justify-content: space-between;
-gap: 12px;
+  background: linear-gradient(135deg, var(--teal) 0%, var(--sky) 100%);
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .rc-name {
-font-family: var(–mono);
-font-size: 18px;
-font-weight: 500;
-color: var(–white);
+  font-family: var(--mono);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--white);
 }
 
 .rc-meta {
-font-size: 12px;
-font-weight: 600;
-color: rgba(255,255,255,0.75);
-margin-top: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.75);
+  margin-top: 4px;
 }
 
 .badge {
-font-size: 11px;
-font-weight: 800;
-padding: 5px 12px;
-border-radius: 100px;
-letter-spacing: 0.5px;
-white-space: nowrap;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 5px 12px;
+  border-radius: 100px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
 .badge-ok   { background: rgba(255,255,255,0.2); color: #fff; border: 1.5px solid rgba(255,255,255,0.5); }
-.badge-warn { background: rgba(247,168,0,0.15); color: var(–gold); border: 1.5px solid rgba(247,168,0,0.4); }
+.badge-warn { background: rgba(247,168,0,0.15); color: var(--gold); border: 1.5px solid rgba(247,168,0,0.4); }
 
 .rc-body { padding: 24px; }
 
 /* Compat warning */
 .compat-box {
-display: none;
-background: #fffbeb;
-border: 2px solid #fde68a;
-border-radius: 14px;
-padding: 16px;
-margin-bottom: 20px;
+  display: none;
+  background: #fffbeb;
+  border: 2px solid #fde68a;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 20px;
 }
 .compat-box.visible { display: block; }
 .compat-head {
-font-size: 12px;
-font-weight: 800;
-color: #92400e;
-margin-bottom: 8px;
-text-transform: uppercase;
-letter-spacing: 0.5px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #92400e;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 .compat-item {
-font-size: 13px;
-font-weight: 600;
-color: #78350f;
-padding: 3px 0 3px 18px;
-position: relative;
-line-height: 1.5;
+  font-size: 13px;
+  font-weight: 600;
+  color: #78350f;
+  padding: 3px 0 3px 18px;
+  position: relative;
+  line-height: 1.5;
 }
-.compat-item::before { content: ‘⚠️’; position: absolute; left: 0; font-size: 11px; top: 4px; }
+.compat-item::before { content: '⚠️'; position: absolute; left: 0; font-size: 11px; top: 4px; }
 
 /* Field */
 .field { margin-bottom: 20px; }
 
 .field-label {
-font-size: 11px;
-font-weight: 800;
-text-transform: uppercase;
-letter-spacing: 1.5px;
-color: var(–ink3);
-margin-bottom: 8px;
-display: flex;
-align-items: center;
-gap: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--ink3);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .field-box {
-background: var(–sand);
-border: 2px solid var(–sand3);
-border-radius: 14px;
-padding: 14px 16px;
-transition: border-color 0.15s;
+  background: var(--sand);
+  border: 2px solid var(--sand3);
+  border-radius: 14px;
+  padding: 14px 16px;
+  transition: border-color 0.15s;
 }
-.field-hint {
-font-size: 12px;
-font-weight: 600;
-color: var(–ink3);
-margin-top: 8px;
-padding: 0 4px;
-}
-
-.field-box:focus-within { border-color: var(–teal); box-shadow: 0 0 0 3px rgba(11,191,163,0.1); }
+.field-box:focus-within { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(11,191,163,0.1); }
 
 .field-box textarea {
-width: 100%; background: transparent;
-border: none; outline: none;
-font-family: var(–fun);
-font-size: 14px;
-font-weight: 600;
-color: var(–ink);
-line-height: 1.6;
-resize: vertical;
-min-height: 72px;
+  width: 100%; background: transparent;
+  border: none; outline: none;
+  font-family: var(--fun);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.6;
+  resize: vertical;
+  min-height: 72px;
 }
 
 /* Enhance button */
+.enhance-row {
+  display: flex; align-items: center;
+  gap: 10px; margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-enhance {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 20px;
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  border: none;
+  border-radius: 100px;
+  color: white;
+  font-family: var(--fun);
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  box-shadow: 0 4px 14px rgba(124,58,237,0.3);
+}
+.btn-enhance:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(124,58,237,0.4); }
+.btn-enhance:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.enhance-note {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink3);
+}
+
 /* Code preview */
 .code-preview {
-background: #1e293b;
-border-radius: 14px;
-padding: 16px;
-font-family: var(–mono);
-font-size: 12px;
-color: #94a3b8;
-line-height: 1.8;
-max-height: 200px;
-overflow-y: auto;
-white-space: pre;
-overflow-x: auto;
+  background: #1e293b;
+  border-radius: 14px;
+  padding: 16px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: #94a3b8;
+  line-height: 1.8;
+  max-height: 200px;
+  overflow-y: auto;
+  white-space: pre;
+  overflow-x: auto;
 }
 .code-preview .ck { color: #f472b6; }
 .code-preview .cv { color: #34d399; }
@@ -433,446 +455,440 @@ overflow-x: auto;
 
 /* Download button */
 .btn-dl {
-width: 100%;
-margin-top: 20px;
-padding: 18px;
-background: linear-gradient(135deg, var(–coral) 0%, var(–coral2) 100%);
-border: none;
-border-radius: 16px;
-color: white;
-font-family: var(–fun);
-font-size: 16px;
-font-weight: 900;
-cursor: pointer;
-transition: all 0.2s ease;
-display: flex; align-items: center; justify-content: center;
-gap: 10px;
-box-shadow: 0 6px 24px rgba(255,107,107,0.35);
-letter-spacing: 0.3px;
+  width: 100%;
+  margin-top: 20px;
+  padding: 18px;
+  background: linear-gradient(135deg, var(--coral) 0%, var(--coral2) 100%);
+  border: none;
+  border-radius: 16px;
+  color: white;
+  font-family: var(--fun);
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px;
+  box-shadow: 0 6px 24px rgba(255,107,107,0.35);
+  letter-spacing: 0.3px;
 }
 .btn-dl:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(255,107,107,0.45); }
 .btn-dl .dl-fname { font-size: 12px; font-weight: 600; opacity: 0.75; }
 
 /* ── SEARCH PANEL ── */
 
+
+
+
 /* Results */
 .results-list { display: flex; flex-direction: column; gap: 10px; }
 
 .skill-card {
-background: var(–white);
-border: 2px solid var(–sand3);
-border-radius: 18px;
-padding: 18px 20px;
-display: flex;
-align-items: flex-start;
-justify-content: space-between;
-gap: 14px;
-cursor: pointer;
-transition: all 0.18s ease;
-box-shadow: 0 2px 10px var(–shadow);
+  background: var(--white);
+  border: 2px solid var(--sand3);
+  border-radius: 18px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  box-shadow: 0 2px 10px var(--shadow);
 }
 
 .skill-card:hover {
-border-color: var(–teal);
-transform: translateY(-2px);
-box-shadow: 0 6px 24px rgba(11,191,163,0.12);
+  border-color: var(--teal);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(11,191,163,0.12);
 }
 
 .sk-name {
-font-family: var(–mono);
-font-size: 14px;
-font-weight: 500;
-color: var(–ink);
-margin-bottom: 4px;
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 4px;
 }
 .sk-desc {
-font-size: 13px;
-font-weight: 600;
-color: var(–ink3);
-line-height: 1.5;
-display: -webkit-box;
--webkit-line-clamp: 2;
--webkit-box-orient: vertical;
-overflow: hidden;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink3);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .sk-stats {
-font-family: var(–mono);
-font-size: 11px;
-color: var(–ink3);
-margin-top: 6px;
-display: flex; gap: 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink3);
+  margin-top: 6px;
+  display: flex; gap: 12px;
 }
 
 .btn-reel {
-flex-shrink: 0;
-padding: 9px 18px;
-background: transparent;
-border: 2px solid var(–sand3);
-border-radius: 100px;
-font-family: var(–fun);
-font-size: 12px;
-font-weight: 800;
-color: var(–ink2);
-cursor: pointer;
-transition: all 0.15s;
-white-space: nowrap;
+  flex-shrink: 0;
+  padding: 9px 18px;
+  background: transparent;
+  border: 2px solid var(--sand3);
+  border-radius: 100px;
+  font-family: var(--fun);
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ink2);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
 }
-.btn-reel:hover { border-color: var(–teal); color: var(–teal); background: rgba(11,191,163,0.05); }
-.btn-reel.done { border-color: var(–teal); color: var(–teal); background: rgba(11,191,163,0.08); cursor: default; }
+.btn-reel:hover { border-color: var(--teal); color: var(--teal); background: rgba(11,191,163,0.05); }
+.btn-reel.done { border-color: var(--teal); color: var(--teal); background: rgba(11,191,163,0.08); cursor: default; }
 .btn-reel.loading { opacity: 0.5; cursor: not-allowed; }
 
 /* Empty state */
 .empty-state {
-text-align: center;
-padding: 60px 24px;
-color: var(–ink3);
-font-size: 14px;
-font-weight: 600;
+  text-align: center;
+  padding: 60px 24px;
+  color: var(--ink3);
+  font-size: 14px;
+  font-weight: 600;
 }
 .empty-state .e-icon { font-size: 40px; margin-bottom: 12px; display: block; }
-.empty-state .e-hint { font-size: 13px; color: var(–ink3); margin-top: 6px; font-weight: 600; }
+.empty-state .e-hint { font-size: 13px; color: var(--ink3); margin-top: 6px; font-weight: 600; }
 
 /* ── HOW IT WORKS — ZIGZAG ── */
 .how-section {
-margin-top: 72px;
+  margin-top: 72px;
 }
 
 .how-header {
-text-align: center;
-margin-bottom: 48px;
+  text-align: center;
+  margin-bottom: 48px;
 }
 
 .how-eyebrow {
-font-size: 11px;
-font-weight: 800;
-letter-spacing: 2.5px;
-text-transform: uppercase;
-color: var(–ink3);
-margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: 8px;
 }
 
 .how-heading {
-font-family: var(–pac);
-font-size: 36px;
-color: var(–ink);
+  font-family: var(--pac);
+  font-size: 36px;
+  color: var(--ink);
 }
 
 /* Steps as alternating full-width rows */
 .steps { display: flex; flex-direction: column; gap: 20px; }
 
 .step {
-background: var(–white);
-border: 2px solid var(–sand3);
-border-radius: 24px;
-padding: 28px 32px;
-display: grid;
-grid-template-columns: 72px 1fr auto;
-align-items: center;
-gap: 20px;
-box-shadow: 0 3px 14px var(–shadow);
-transition: all 0.2s ease;
-position: relative;
-overflow: hidden;
+  background: var(--white);
+  border: 2px solid var(--sand3);
+  border-radius: 24px;
+  padding: 28px 32px;
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 3px 14px var(--shadow);
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .step::before {
-content: ‘’;
-position: absolute;
-left: 0; top: 0; bottom: 0;
-width: 5px;
-border-radius: 0 4px 4px 0;
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 5px;
+  border-radius: 0 4px 4px 0;
 }
 
-.step:nth-child(1)::before { background: var(–coral); }
-.step:nth-child(2)::before { background: var(–gold); }
+.step:nth-child(1)::before { background: var(--coral); }
+.step:nth-child(2)::before { background: var(--gold); }
 .step:nth-child(3)::before { background: #a855f7; }
-.step:nth-child(4)::before { background: var(–teal); }
+.step:nth-child(4)::before { background: var(--teal); }
 
-.step:hover { transform: translateY(-3px); box-shadow: 0 8px 28px var(–shadow2); }
+.step:hover { transform: translateY(-3px); box-shadow: 0 8px 28px var(--shadow2); }
 
 .step-num {
-font-family: var(–pac);
-font-size: 42px;
-line-height: 1;
-text-align: center;
+  font-family: var(--pac);
+  font-size: 42px;
+  line-height: 1;
+  text-align: center;
 }
 
-.step:nth-child(1) .step-num { color: var(–coral); }
-.step:nth-child(2) .step-num { color: var(–gold); }
+.step:nth-child(1) .step-num { color: var(--coral); }
+.step:nth-child(2) .step-num { color: var(--gold); }
 .step:nth-child(3) .step-num { color: #a855f7; }
-.step:nth-child(4) .step-num { color: var(–teal); }
+.step:nth-child(4) .step-num { color: var(--teal); }
 
 .step-content { flex: 1; }
 
 .step-title {
-font-size: 18px;
-font-weight: 900;
-color: var(–ink);
-margin-bottom: 6px;
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--ink);
+  margin-bottom: 6px;
 }
 
 .step-body {
-font-size: 14px;
-font-weight: 600;
-color: var(–ink3);
-line-height: 1.65;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink3);
+  line-height: 1.65;
 }
 
 .step-body code {
-font-family: var(–mono);
-font-size: 12px;
-background: var(–sand2);
-border: 1px solid var(–sand3);
-border-radius: 5px;
-padding: 1px 6px;
-color: var(–ink2);
+  font-family: var(--mono);
+  font-size: 12px;
+  background: var(--sand2);
+  border: 1px solid var(--sand3);
+  border-radius: 5px;
+  padding: 1px 6px;
+  color: var(--ink2);
 }
 
-.step-body .bad { color: var(–coral); background: rgba(255,107,107,0.08); border-color: rgba(255,107,107,0.2); }
+.step-body .bad { color: var(--coral); background: rgba(255,107,107,0.08); border-color: rgba(255,107,107,0.2); }
 
 .step-emoji { font-size: 40px; opacity: 0.9; }
 
 @media (max-width: 580px) {
-.step { grid-template-columns: 48px 1fr; }
-.step-emoji { display: none; }
-.tabs { flex-direction: column; }
-.search-row { flex-direction: column; }
-.skill-card { flex-direction: column; }
-.btn-reel { width: 100%; text-align: center; }
+  .step { grid-template-columns: 48px 1fr; }
+  .step-emoji { display: none; }
+  .tabs { flex-direction: column; }
+  .search-row { flex-direction: column; }
+  .skill-card { flex-direction: column; }
+  .btn-reel { width: 100%; text-align: center; }
 }
 
 /* ── SPINNER ── */
 @keyframes spin { to { transform: rotate(360deg); } }
 .spin {
-width: 14px; height: 14px;
-border: 2px solid rgba(255,255,255,0.4);
-border-top-color: white;
-border-radius: 50%;
-animation: spin 0.7s linear infinite;
-display: inline-block; flex-shrink: 0;
+  width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block; flex-shrink: 0;
 }
 
 /* ── TOASTS ── */
 .toast-bay {
-position: fixed; bottom: 24px; right: 24px;
-display: flex; flex-direction: column; gap: 8px;
-z-index: 999;
+  position: fixed; bottom: 24px; right: 24px;
+  display: flex; flex-direction: column; gap: 8px;
+  z-index: 999;
 }
 .toast {
-background: var(–ink);
-border-radius: 12px;
-padding: 12px 18px;
-font-family: var(–fun);
-font-size: 13px;
-font-weight: 700;
-color: white;
-display: flex; align-items: center; gap: 10px;
-animation: toastUp 0.22s ease;
-box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-max-width: 300px;
+  background: var(--ink);
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-family: var(--fun);
+  font-size: 13px;
+  font-weight: 700;
+  color: white;
+  display: flex; align-items: center; gap: 10px;
+  animation: toastUp 0.22s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  max-width: 300px;
 }
-.toast.ok  { background: var(–teal2); }
-.toast.err { background: var(–coral); }
+.toast.ok  { background: var(--teal2); }
+.toast.err { background: var(--coral); }
 @keyframes toastUp {
-from { opacity: 0; transform: translateY(10px) scale(0.96); }
-to   { opacity: 1; transform: none; }
+  from { opacity: 0; transform: translateY(10px) scale(0.96); }
+  to   { opacity: 1; transform: none; }
 }
 
 /* ── FOOTER ── */
 footer {
-margin-top: 80px;
-padding: 28px 0;
-border-top: 2px dashed var(–sand3);
-display: flex;
-align-items: center;
-justify-content: space-between;
-gap: 16px;
-flex-wrap: wrap;
+  margin-top: 80px;
+  padding: 28px 0;
+  border-top: 2px dashed var(--sand3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .footer-brand {
-font-family: var(–pac);
-font-size: 18px;
-color: var(–ink2);
+  font-family: var(--pac);
+  font-size: 18px;
+  color: var(--ink2);
 }
 
 .footer-links {
-display: flex; gap: 20px;
-font-size: 13px; font-weight: 700;
+  display: flex; gap: 20px;
+  font-size: 13px; font-weight: 700;
 }
-.footer-links a { color: var(–ink3); text-decoration: none; transition: color 0.15s; }
-.footer-links a:hover { color: var(–teal); }
+.footer-links a { color: var(--ink3); text-decoration: none; transition: color 0.15s; }
+.footer-links a:hover { color: var(--teal); }
 
 /* scrollbar */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(–sand2); }
-::-webkit-scrollbar-thumb { background: var(–sand3); border-radius: 3px; }
+::-webkit-scrollbar-track { background: var(--sand2); }
+::-webkit-scrollbar-thumb { background: var(--sand3); border-radius: 3px; }
 </style>
-
 </head>
 <body>
 
 <div class="wrap">
 
-<!-- ── HERO ── -->
+  <!-- ── HERO ── -->
+  <div class="hero">
+    <div class="hero-pill">🌊 &nbsp;ClawHub → Claude.ai · Zero Setup · Instant Download</div>
 
-<div class="hero">
-<div class="hero-pill">🌊  ClawHub → [Claude.ai](http://claude.ai/) · Zero Setup · Instant Download</div>
-
-```
-<div class="hero-title">
-  <span class="hero-word w-claw">Claw</span>
-  <span class="hero-word w-arrow">⟶</span>
-  <span class="hero-word w-claude">Claude</span>
-</div>
-
-<p class="hero-sub">
-  Convert any <span class="hl-coral">ClawHub skill</span> to work with
-  <span class="hl-teal">Claude Code</span> — the fastest way to extend
-  your AI agent with 36k+ community-built skills. 🦞
-</p>
-
-<div class="stat-row">
-  <div class="stat-chip">
-    <span class="chip-emoji">🦞</span>
-    <span class="chip-num" id="skillCount">36k+</span>
-    <span>ClawHub Skills</span>
-  </div>
-  <div class="stat-chip">
-    <span class="chip-emoji">⚡</span>
-    <span class="chip-num">Claude</span>
-    <span>Code Ready</span>
-  </div>
-  <div class="stat-chip">
-    <span class="chip-emoji">🔒</span>
-    <span class="chip-num">100%</span>
-    <span>Browser-Side</span>
-  </div>
-</div>
-```
-
-</div>
-
-<div class="wave-div">〰〰〰〰〰〰〰〰〰〰〰〰</div>
-
-<!-- ── ACTION ROW ── -->
-
-<div class="action-row">
-<span class="action-label">Find skills to convert on ClawHub →</span>
-<a href="[https://clawhub.ai](https://clawhub.ai/)" target="_blank" class="btn-browse">
-🦞 Browse ClawHub
-</a>
-</div>
-
-<!-- ── UPLOAD (always visible, no tabs) ── -->
-
-<div class="sec-label">Drop your ClawHub .skill zip</div>
-
-<div class="drop-zone" id="dropZone">
-<input type="file" accept=".zip,.skill" id="fileInput" onchange="handleFile(this.files[0])">
-<span class="drop-icon">🦞</span>
-<div class="drop-title">Haul Your Skill Aboard!</div>
-<div class="drop-sub">
-Drag & drop or click to grab your zip<br>
-Accepts <code>.skill</code> and <code>.zip</code> files from ClawHub
-</div>
-</div>
-
-<!-- Result card -->
-
-<div class="result-card" id="resultCard">
-<div class="rc-header">
-<div>
-<div class="rc-name" id="rcName">—</div>
-<div class="rc-meta" id="rcMeta">—</div>
-</div>
-<div id="rcBadge"></div>
-</div>
-<div class="rc-body">
-
-```
-  <div class="compat-box" id="compatBox">
-    <div class="compat-head">⚠ Heads Up — Compatibility Notes</div>
-    <div id="compatList"></div>
-  </div>
-
-  <div class="field">
-    <div class="field-label">✏️ Claude Trigger Description</div>
-    <div class="field-box">
-      <textarea id="descTA" rows="4" placeholder="Description from the skill will appear here — edit if needed before downloading."></textarea>
+    <div class="hero-title">
+      <span class="hero-word w-claw">Claw</span>
+      <span class="hero-word w-arrow">⟶</span>
+      <span class="hero-word w-claude">Claude</span>
     </div>
-    <div class="field-hint">Edit to control when Claude triggers this skill. Be specific about the use case.</div>
-  </div>
 
-  <div class="field">
-    <div class="field-label">👁 SKILL.md Preview</div>
-    <div class="code-preview" id="codePreview">—</div>
-  </div>
+    <p class="hero-sub">
+      Convert any <span class="hl-coral">ClawHub skill</span> to work with
+      <span class="hl-teal">Claude Code</span> — the fastest way to extend
+      your AI agent with 36k+ community-built skills. 🦞
+    </p>
 
-  <button class="btn-dl" onclick="downloadSkill()">
-    ⬇️ Download Claude-Ready .skill
-    <span class="dl-fname" id="dlName"></span>
-  </button>
-</div>
-```
-
-</div>
-
-<!-- ── HOW IT WORKS ── -->
-
-<div class="how-section">
-<div class="how-header">
-<div class="how-eyebrow">How it works</div>
-<div class="how-heading">How it works 🌴</div>
-</div>
-
-```
-<div class="steps">
-  <div class="step">
-    <div class="step-num">1</div>
-    <div class="step-content">
-      <div class="step-title">Find a Skill on ClawHub</div>
-      <div class="step-body">Browse <a href="<https://clawhub.ai>" target="_blank" style="color:var(--teal);font-weight:700">clawhub.ai</a>, find a skill you want, and download the <code>.zip</code>. Then drop it here — everything converts in your browser, no server needed.</div>
+    <div class="stat-row">
+      <div class="stat-chip">
+        <span class="chip-emoji">🦞</span>
+        <span class="chip-num" id="skillCount">36k+</span>
+        <span>ClawHub Skills</span>
+      </div>
+      <div class="stat-chip">
+        <span class="chip-emoji">⚡</span>
+        <span class="chip-num">Claude</span>
+        <span>Code Ready</span>
+      </div>
+      <div class="stat-chip">
+        <span class="chip-emoji">🔒</span>
+        <span class="chip-num">100%</span>
+        <span>Browser-Side</span>
+      </div>
     </div>
-    <div class="step-emoji">📦</div>
   </div>
-  <div class="step">
-    <div class="step-num">2</div>
-    <div class="step-content">
-      <div class="step-title">Strip the Clutter</div>
-      <div class="step-body">ClawHub's <code class="bad">metadata: {clawdbot:...}</code> and <code class="bad">_meta.json</code> are surgically removed. Your <code>SKILL.md</code> body and any extra files are kept exactly as-is.</div>
-    </div>
-    <div class="step-emoji">🧹</div>
-  </div>
-  <div class="step">
-    <div class="step-num">3</div>
-    <div class="step-content">
-      <div class="step-title">Claude Polishes It</div>
-      <div class="step-body">Hit <strong style="color:#a855f7">✦ Enhance</strong> and Claude AI rewrites the description so it triggers correctly in Claude.ai. Compatibility warnings flag CLI tools or env vars you'll need.</div>
-    </div>
-    <div class="step-emoji">✨</div>
-  </div>
-  <div class="step">
-    <div class="step-num">4</div>
-    <div class="step-content">
-      <div class="step-title">Drop it into Claude Code</div>
-      <div class="step-body">Place the <code>.skill</code> file in your Claude Code workspace <code>skills/</code> folder — it's live instantly. For instruction-only skills (no CLI tools), you can also upload to Claude.ai Settings → Skills. 🤙</div>
-    </div>
-    <div class="step-emoji">🏄</div>
-  </div>
-</div>
-```
 
-</div>
+  <div class="wave-div">〰〰〰〰〰〰〰〰〰〰〰〰</div>
 
-<footer>
-<div class="footer-brand">🦞 ClawToClaude</div>
-<div class="footer-links">
-<a href="https://github.com/ibalajisivarajan/clawtoclaude" target="_blank">GitHub</a>
-<a href="[https://clawhub.ai](https://clawhub.ai/)" target="_blank">ClawHub</a>
-<a href="[https://claude.ai](https://claude.ai/)" target="_blank">Claude.ai</a>
-</div>
-</footer>
+  <!-- ── ACTION ROW ── -->
+  <div class="action-row">
+    <span class="action-label">Find skills to convert on ClawHub →</span>
+    <a href="https://clawhub.ai" target="_blank" class="btn-browse">
+      🦞 Browse ClawHub
+    </a>
+  </div>
+
+  <!-- ── UPLOAD (always visible, no tabs) ── -->
+  <div class="sec-label">Drop your ClawHub .skill zip</div>
+
+  <div class="drop-zone" id="dropZone">
+    <input type="file" accept=".zip,.skill" id="fileInput" onchange="handleFile(this.files[0])">
+    <span class="drop-icon">🦞</span>
+    <div class="drop-title">Haul Your Skill Aboard!</div>
+    <div class="drop-sub">
+      Drag & drop or click to grab your zip<br>
+      Accepts <code>.skill</code> and <code>.zip</code> files from ClawHub
+    </div>
+  </div>
+
+  <!-- Result card -->
+  <div class="result-card" id="resultCard">
+    <div class="rc-header">
+      <div>
+        <div class="rc-name" id="rcName">—</div>
+        <div class="rc-meta" id="rcMeta">—</div>
+      </div>
+      <div id="rcBadge"></div>
+    </div>
+    <div class="rc-body">
+
+      <div class="compat-box" id="compatBox">
+        <div class="compat-head">⚠ Heads Up — Compatibility Notes</div>
+        <div id="compatList"></div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">✏️ Claude Trigger Description</div>
+        <div class="field-box">
+          <textarea id="descTA" rows="3" placeholder="Description loads here..."></textarea>
+        </div>
+        <div class="enhance-row">
+          <button class="btn-enhance" id="enhBtn" onclick="enhanceDesc()">
+            <span class="spin" id="enhSpin" style="display:none"></span>
+            ✦ Enhance Description
+          </button>
+          <span class="enhance-note" id="enhNote">Rewrites for better Claude triggering</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">👁 SKILL.md Preview</div>
+        <div class="code-preview" id="codePreview">—</div>
+      </div>
+
+      <button class="btn-dl" onclick="downloadSkill()">
+        ⬇️ Download Claude-Ready .skill
+        <span class="dl-fname" id="dlName"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── HOW IT WORKS ── -->
+  <div class="how-section">
+    <div class="how-header">
+      <div class="how-eyebrow">How it works</div>
+      <div class="how-heading">How it works 🌴</div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Find a Skill on ClawHub</div>
+          <div class="step-body">Browse <a href="https://clawhub.ai" target="_blank" style="color:var(--teal);font-weight:700">clawhub.ai</a>, find a skill you want, and download the <code>.zip</code>. Then drop it here — everything converts in your browser, no server needed.</div>
+        </div>
+        <div class="step-emoji">📦</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Strip the Clutter</div>
+          <div class="step-body">ClawHub's <code class="bad">metadata: {clawdbot:...}</code> and <code class="bad">_meta.json</code> are surgically removed. Your <code>SKILL.md</code> body and any extra files are kept exactly as-is.</div>
+        </div>
+        <div class="step-emoji">🧹</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Claude Polishes It</div>
+          <div class="step-body">Hit <strong style="color:#a855f7">✦ Enhance</strong> and Claude AI rewrites the description so it triggers correctly in Claude.ai. Compatibility warnings flag CLI tools or env vars you'll need.</div>
+        </div>
+        <div class="step-emoji">✨</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">Drop it into Claude Code</div>
+          <div class="step-body">Place the <code>.skill</code> file in your Claude Code workspace <code>skills/</code> folder — it's live instantly. For instruction-only skills (no CLI tools), you can also upload to Claude.ai Settings → Skills. 🤙</div>
+        </div>
+        <div class="step-emoji">🏄</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-brand">🦞 ClawToClaude</div>
+    <div class="footer-links">
+      <a href="https://github.com/ibalajisivarajan/clawtoclaude" target="_blank">GitHub</a>
+      <a href="https://clawhub.ai" target="_blank">ClawHub</a>
+      <a href="https://claude.ai" target="_blank">Claude.ai</a>
+    </div>
+  </footer>
 
 </div>
 
@@ -889,201 +905,254 @@ const dz = document.getElementById('dropZone');
 dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
 dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
 dz.addEventListener('drop', e => {
-e.preventDefault(); dz.classList.remove('drag-over');
-if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  e.preventDefault(); dz.classList.remove('drag-over');
+  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
 });
 
 // ── FILE HANDLER ───────────────────────────────────────────────────────
 async function handleFile(file) {
-if (!file) return;
-// Reset file input so same file can be re-uploaded
-document.getElementById('fileInput').value = '';
-try {
-const zip = await JSZip.loadAsync(file);
-await processZip(zip, file.name.replace(/\.(zip|skill)$/i, ''));
-} catch(e) { toast('Oops! Could not read that file 😅 — ' + e.message, 'err'); }
+  if (!file) return;
+  try {
+    const zip = await JSZip.loadAsync(file);
+    await processZip(zip, file.name.replace(/\.(zip|skill)$/i, ''));
+  } catch(e) { toast('Oops! Could not read that file 😅 — ' + e.message, 'err'); }
 }
 
 async function processZip(zip, hint) {
-// Reset all state upfront so previous skill data never bleeds into new skill
-currentZip   = null;
-currentParsed = null;
-currentSlug  = null;
-document.getElementById('descTA').value = '';
-document.getElementById('codePreview').textContent = '—';
-document.getElementById('resultCard').classList.remove('visible');
-document.getElementById('compatBox').classList.remove('visible');
+  currentZip = zip;
+  const smFile = zip.file('SKILL.md') || zip.file(/SKILL\.md$/i)[0];
+  if (!smFile) { toast('No SKILL.md found in this zip 🤔', 'err'); return; }
 
-currentZip = zip;
-const smFile = zip.file('[SKILL.md](http://skill.md/)') || zip.file(/SKILL\.md$/i)[0];
-if (!smFile) { toast('No [SKILL.md](http://skill.md/) found in this zip 🤔', 'err'); return; }
+  const raw = await smFile.async('string');
+  const parsed = parseSkillMd(raw);
 
-const raw = await smFile.async('string');
-const parsed = parseSkillMd(raw);
+  let meta = null;
+  const mf = zip.file('_meta.json');
+  if (mf) { try { meta = JSON.parse(await mf.async('string')); } catch(e){} }
 
-let meta = null;
-const mf = zip.file('_meta.json');
-if (mf) { try { meta = JSON.parse(await mf.async('string')); } catch(e){} }
+  const slug = parsed.name || meta?.slug || hint || 'my-skill';
+  currentSlug = slug;
+  currentParsed = parsed;
 
-const slug = [parsed.name](http://parsed.name/) || meta?.slug || hint || 'my-skill';
-currentSlug = slug;
-currentParsed = parsed;
+  document.getElementById('rcName').textContent = slug;
+  const files = Object.keys(zip.files).filter(f => !f.endsWith('/')).join(', ');
+  document.getElementById('rcMeta').textContent = files + ' · v' + (meta?.version || '1.0.0');
+  document.getElementById('descTA').value = parsed.description || '';
+  document.getElementById('dlName').textContent = slug + '.skill';
 
-document.getElementById('rcName').textContent = slug;
-const files = Object.keys(zip.files).filter(f => !f.endsWith('/')).join(', ');
-document.getElementById('rcMeta').textContent = files + ' · v' + (meta?.version || '1.0.0');
-document.getElementById('descTA').value = parsed.description || '';
-document.getElementById('dlName').textContent = slug + '.skill';
-
-renderPreview(parsed, parsed.description || '');
-checkCompat(parsed);
-document.getElementById('resultCard').classList.add('visible');
-toast('✓ Skill loaded: ' + slug, 'ok');
+  renderPreview(parsed, parsed.description || '');
+  checkCompat(parsed);
+  document.getElementById('resultCard').classList.add('visible');
+  toast('✓ Skill loaded: ' + slug, 'ok');
 }
 
 // ── PARSER (bulletproof — handles ClawHub inline JSON metadata) ────────
 function parseSkillMd(raw) {
-const fmMatch = raw.match(/^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(\r?\n|$)/);
-if (!fmMatch) return { name: '', description: '', body: raw.trim(), requiresEnv: [], requiresBins: [] };
+  const fmMatch = raw.match(/^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(\r?\n|$)/);
+  if (!fmMatch) return { name: '', description: '', body: raw.trim(), requiresEnv: [], requiresBins: [] };
 
-const block = fmMatch[1];
-const body = raw.slice(fmMatch[0].length).trim();
-const lines = block.split(/\r?\n/);
-const fields = {};
-let currentKey = null;
+  const block = fmMatch[1];
+  const body = raw.slice(fmMatch[0].length).trim();
+  const lines = block.split(/\r?\n/);
+  const fields = {};
+  let currentKey = null;
 
-for (const line of lines) {
-const km = line.match(/^([a-zA-Z_][a-zA-Z0-9_-]*):\s*(.*)/);
-if (km) { currentKey = km[1]; fields[currentKey] = [km[2]]; }
-else if (currentKey && (line.startsWith(' ') || line.startsWith('\t') || line === '')) {
-fields[currentKey].push(line);
-}
-}
+  for (const line of lines) {
+    const km = line.match(/^([a-zA-Z_][a-zA-Z0-9_-]*):\s*(.*)/);
+    if (km) { currentKey = km[1]; fields[currentKey] = [km[2]]; }
+    else if (currentKey && (line.startsWith(' ') || line.startsWith('\t') || line === '')) {
+      fields[currentKey].push(line);
+    }
+  }
 
-const getString = k => {
-if (!fields[k]) return '';
-const first = (fields[k][0] || '').trim();
-if (/^"(.*)"$/.test(first)) return first.slice(1, -1).replace(/\\"/g, '"');
-if (/^'(.*)'$/.test(first)) return first.slice(1, -1).replace(/''/g, "'");
-if (/^[|>]/.test(first)) return fields[k].slice(1).map(l => l.replace(/^\s{0,4}/, '')).join('\n').trim();
-return first;
-};
+  const getString = k => {
+    if (!fields[k]) return '';
+    const first = (fields[k][0] || '').trim();
+    if (/^"(.*)"$/.test(first)) return first.slice(1, -1).replace(/\\"/g, '"');
+    if (/^'(.*)'$/.test(first)) return first.slice(1, -1).replace(/''/g, "'");
+    if (/^[|>]/.test(first)) return fields[k].slice(1).map(l => l.replace(/^\s{0,4}/, '')).join('\n').trim();
+    return first;
+  };
 
-const rawMeta = (fields['metadata'] || []).join(' ');
-const envs = [...rawMeta.matchAll(/"env"\s*:\s*\[([^\]]+)\]/g)]
-.flatMap(m => m[1].split(',').map(s => s.trim().replace(/['"]/g, ''))).filter(Boolean);
-const bins = [...rawMeta.matchAll(/"anyBins"\s*:\s*\[([^\]]+)\]/g),
-...rawMeta.matchAll(/"bins"\s*:\s*\[([^\]]+)\]/g)]
-.flatMap(m => m[1].split(',').map(s => s.trim().replace(/['"]/g, ''))).filter(Boolean);
+  const rawMeta = (fields['metadata'] || []).join(' ');
+  const envs = [...rawMeta.matchAll(/"env"\s*:\s*\[([^\]]+)\]/g)]
+    .flatMap(m => m[1].split(',').map(s => s.trim().replace(/['"]/g, ''))).filter(Boolean);
+  const bins = [...rawMeta.matchAll(/"anyBins"\s*:\s*\[([^\]]+)\]/g),
+                ...rawMeta.matchAll(/"bins"\s*:\s*\[([^\]]+)\]/g)]
+    .flatMap(m => m[1].split(',').map(s => s.trim().replace(/['"]/g, ''))).filter(Boolean);
 
-return {
-name: getString('name'),
-description: getString('description'),
-homepage: getString('homepage'),
-compatibility: getString('compatibility'),
-body,
-requiresEnv: [...new Set(envs)],
-requiresBins: [...new Set(bins)],
-};
+  return {
+    name: getString('name'),
+    description: getString('description'),
+    homepage: getString('homepage'),
+    compatibility: getString('compatibility'),
+    body,
+    requiresEnv: [...new Set(envs)],
+    requiresBins: [...new Set(bins)],
+  };
 }
 
 // ── COMPAT CHECK ───────────────────────────────────────────────────────
 function checkCompat(p) {
-const warns = [];
-if (p.requiresBins?.length)
-warns.push('Requires CLI tools (install locally for Claude Code): ' + p.requiresBins.join(', ') + ' — only works in Claude Code (not [Claude.ai](http://claude.ai/) chat)');
-if (p.requiresEnv?.length)
-warns.push('Needs env vars: ' + p.requiresEnv.join(', ') + ' — set these up before using');
-if (/bash|shell|#!/i.test(p.body))
-warns.push('Contains shell/bash commands — works in Claude Code, limited in [Claude.ai](http://claude.ai/) chat');
+  const warns = [];
+  if (p.requiresBins?.length)
+    warns.push('Requires CLI tools (install locally for Claude Code): ' + p.requiresBins.join(', ') + ' — only works in Claude Code (not Claude.ai chat)');
+  if (p.requiresEnv?.length)
+    warns.push('Needs env vars: ' + p.requiresEnv.join(', ') + ' — set these up before using');
+  if (/bash|shell|#!/i.test(p.body))
+    warns.push('Contains shell/bash commands — works in Claude Code, limited in Claude.ai chat');
 
-const box = document.getElementById('compatBox');
-const list = document.getElementById('compatList');
-list.innerHTML = warns.map(w => `<div class="compat-item">${esc(w)}</div>`).join('');
+  const box = document.getElementById('compatBox');
+  const list = document.getElementById('compatList');
+  list.innerHTML = warns.map(w => `<div class="compat-item">${esc(w)}</div>`).join('');
 
-if (warns.length) {
-box.classList.add('visible');
-document.getElementById('rcBadge').innerHTML = '<span class="badge badge-warn">⚠ Check Compat</span>';
-} else {
-box.classList.remove('visible');
-document.getElementById('rcBadge').innerHTML = '<span class="badge badge-ok">✓ Claude Ready!</span>';
-}
+  if (warns.length) {
+    box.classList.add('visible');
+    document.getElementById('rcBadge').innerHTML = '<span class="badge badge-warn">⚠ Check Compat</span>';
+  } else {
+    box.classList.remove('visible');
+    document.getElementById('rcBadge').innerHTML = '<span class="badge badge-ok">✓ Claude Ready!</span>';
+  }
 }
 
 // ── PREVIEW ────────────────────────────────────────────────────────────
 function renderPreview(p, desc) {
-const md = buildClaudeMd(p, desc);
-const hi = md
-.replace(/^(---)/gm, '<span class="cc">$1</span>')
-.replace(/^(name|description|compatibility)(:)/gm, '<span class="ck">$1</span><span class="cc">$2</span>')
-.replace(/(?<=:\s)(.+)$/gm, '<span class="cv">$&</span>')
-.replace(/^(#+ .+)$/gm, '<span style="color:#fbbf24">$1</span>');
-document.getElementById('codePreview').innerHTML = hi.slice(0, 1000) + (md.length > 1000 ? '\n…' : '');
+  const md = buildClaudeMd(p, desc);
+  const hi = md
+    .replace(/^(---)/gm, '<span class="cc">$1</span>')
+    .replace(/^(name|description|compatibility)(:)/gm, '<span class="ck">$1</span><span class="cc">$2</span>')
+    .replace(/(?<=:\s)(.+)$/gm, '<span class="cv">$&</span>')
+    .replace(/^(#+ .+)$/gm, '<span style="color:#fbbf24">$1</span>');
+  document.getElementById('codePreview').innerHTML = hi.slice(0, 1000) + (md.length > 1000 ? '\n…' : '');
 }
 
 document.getElementById('descTA').addEventListener('input', () => {
-if (currentParsed) renderPreview(currentParsed, document.getElementById('descTA').value);
+  if (currentParsed) renderPreview(currentParsed, document.getElementById('descTA').value);
 });
 
-// ── BUILD CLEAN [SKILL.MD](http://skill.md/) ───────────────────────────────────────────────
+// ── BUILD CLEAN SKILL.MD ───────────────────────────────────────────────
 // Reconstructs frontmatter from scratch — only Claude-safe fields.
 // Never passes raw ClawHub frontmatter through (prevents YAML errors).
 function buildClaudeMd(p, desc) {
-const yamlStr = s => {
-if (!s) return '""';
-if (/^[a-zA-Z0-9 ,._\-\/()!?]+$/.test(s)) return s;
-return '"' + s.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
-};
-const lines = [];
-lines.push('name: ' + yamlStr([p.name](http://p.name/) || 'converted-skill'));
-lines.push('description: ' + yamlStr(desc || p.description || ''));
-if (p.compatibility) lines.push('compatibility: ' + yamlStr(p.compatibility));
-return `---\\n${lines.join('\\n')}\\n---\\n\\n${p.body || ''}`;
+  const yamlStr = s => {
+    if (!s) return '""';
+    if (/^[a-zA-Z0-9 ,._\-\/()!?]+$/.test(s)) return s;
+    return '"' + s.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
+  };
+  const lines = [];
+  lines.push('name: ' + yamlStr(p.name || 'converted-skill'));
+  lines.push('description: ' + yamlStr(desc || p.description || ''));
+  if (p.compatibility) lines.push('compatibility: ' + yamlStr(p.compatibility));
+  return `---\n${lines.join('\n')}\n---\n\n${p.body || ''}`;
 }
 
 // ── DOWNLOAD ───────────────────────────────────────────────────────────
 async function downloadSkill() {
-if (!currentZip || !currentParsed) {
-toast('No skill loaded yet — upload a .skill zip first 😅', 'err');
-return;
+  if (!currentZip || !currentParsed) {
+    toast('No skill loaded yet — upload a .skill zip first 😅', 'err');
+    return;
+  }
+  const desc  = document.getElementById('descTA').value;
+  const newMd = buildClaudeMd(currentParsed, desc);
+
+  const out  = new JSZip();
+  const jobs = [];
+  currentZip.forEach((path, file) => {
+    if (file.dir || path === '_meta.json' || path === 'SKILL.md') return;
+    jobs.push(file.async('arraybuffer').then(d => out.file(path, d)));
+  });
+  await Promise.all(jobs);
+  out.file('SKILL.md', newMd);
+
+  const blob = await out.generateAsync({ type: 'blob', compression: 'DEFLATE' });
+  const a    = Object.assign(document.createElement('a'), {
+    href:     URL.createObjectURL(blob),
+    download: currentSlug + '.skill'
+  });
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  toast('Downloaded: ' + currentSlug + '.skill 🎉', 'ok');
 }
-const desc  = document.getElementById('descTA').value;
-const newMd = buildClaudeMd(currentParsed, desc);
 
-const out  = new JSZip();
-const jobs = [];
-currentZip.forEach((path, file) => {
-if (file.dir || path === '_meta.json' || path === '[SKILL.md](http://skill.md/)') return;
-jobs.push(file.async('arraybuffer').then(d => out.file(path, d)));
-});
-await Promise.all(jobs);
-out.file('[SKILL.md](http://skill.md/)', newMd);
+// ── ENHANCE — 100% offline, works for everyone, no account needed ──────
+function enhanceDesc() {
+  if (!currentParsed) return;
+  const btn  = document.getElementById('enhBtn');
+  const spin = document.getElementById('enhSpin');
+  const note = document.getElementById('enhNote');
+  btn.disabled = true; spin.style.display = 'inline-block';
+  note.textContent = 'Enhancing... ✨';
 
-const blob = await out.generateAsync({ type: 'blob', compression: 'DEFLATE' });
-const a    = Object.assign(document.createElement('a'), {
-href:     URL.createObjectURL(blob),
-download: currentSlug + '.skill'
-});
-document.body.appendChild(a);
-a.click();
-setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
-toast('Downloaded: ' + currentSlug + '.skill 🎉', 'ok');
+  setTimeout(() => {
+    try {
+      const enhanced = localEnhance(currentSlug, document.getElementById('descTA').value, currentParsed);
+      document.getElementById('descTA').value = enhanced;
+      renderPreview(currentParsed, enhanced);
+      note.textContent = '✓ Enhanced! Edit if needed.';
+      toast('Description enhanced! ✨', 'ok');
+    } catch(e) {
+      note.textContent = 'Something went wrong 😅';
+    } finally {
+      btn.disabled = false; spin.style.display = 'none';
+    }
+  }, 350);
+}
+
+// Covers 20+ skill categories — pure JS, zero dependencies
+function localEnhance(name, currentDesc, parsed) {
+  const haystack = (name + ' ' + (parsed.body || '') + ' ' + (currentDesc || '')).toLowerCase();
+
+  const cats = [
+    [/spotify|music|playlist|track|playback|song/,         'play, pause, skip, or search Spotify music'],
+    [/github|git|repo|pull.request|issue|commit|branch/,   'manage GitHub repos, issues, or pull requests'],
+    [/notion|page|database|block|workspace/,               'create or update Notion pages and databases'],
+    [/slack|channel|dm/,                                 'send or read Slack messages and channels'],
+    [/stripe|payment|invoice|charge|subscription/,         'handle Stripe payments and invoices'],
+    [/gmail|email|inbox|send.*mail/,                       'send, read, or manage emails'],
+    [/google.calendar|calendar|event|schedule/,            'create or manage calendar events'],
+    [/jira|ticket|sprint|atlassian/,                       'create or update Jira tickets and sprints'],
+    [/linear|cycle|project.issue/,                         'manage Linear issues and cycles'],
+    [/postgres|mysql|sql|database|query|db/,             'run SQL queries or interact with databases'],
+    [/web.search|tavily|exa|browse|scrape/,              'search the web or scrape content from URLs'],
+    [/twitter|tweet|x\.com/,                              'post or read tweets and social content'],
+    [/file|upload|download|convert|pdf|xlsx/,              'work with files and document conversions'],
+    [/docker|container|kubernetes|k8s/,                    'manage Docker containers or Kubernetes'],
+    [/aws|s3|lambda|ec2|gcp|azure/,                        'interact with cloud services'],
+    [/shopify|product|order|ecommerce/,                    'manage Shopify products and orders'],
+    [/discord|server|bot|webhook/,                         'send Discord messages or manage servers'],
+    [/figma|design|wireframe/,                             'inspect Figma designs and components'],
+    [/asana|trello|task|todo/,                             'manage tasks and projects'],
+    [/api|endpoint|rest|curl|http/,                        'make API calls or HTTP requests'],
+    [/bash|shell|terminal|cli|script/,                     'run terminal commands and shell scripts'],
+  ];
+
+  const match = cats.find(([re]) => re.test(haystack));
+  let desc = match
+    ? `Use when asked to ${match[1]}. `
+    : `Use for ${name.replace(/[-_]/g,' ')} tasks. `;
+
+  const orig = (currentDesc || '').trim();
+  if (orig && orig.length > 10) desc += orig.endsWith('.') ? orig : orig + '.';
+  if (parsed.requiresBins?.length) desc += ` Requires ${parsed.requiresBins.slice(0,2).join(' or ')}.`;
+  if (parsed.requiresEnv?.length)  desc += ` Needs ${parsed.requiresEnv.slice(0,2).join(', ')} env var${parsed.requiresEnv.length > 1 ? 's' : ''}.`;
+
+  return desc.trim().slice(0, 280);
 }
 
 // ── UTILS ──────────────────────────────────────────────────────────────
 function esc(s) {
-return String(s).replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>').replace(/"/g,'"');
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 function toast(msg, type = '') {
-const bay = document.getElementById('toastBay');
-const t = document.createElement('div');
-t.className = 'toast ' + type;
-t.textContent = msg;
-bay.appendChild(t);
-setTimeout(() => t.remove(), 3800);
+  const bay = document.getElementById('toastBay');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  bay.appendChild(t);
+  setTimeout(() => t.remove(), 3800);
 }
 </script>
-
 </body>
 </html>
