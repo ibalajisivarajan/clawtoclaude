@@ -807,7 +807,7 @@ footer {
     <div class="stat-row">
       <div class="stat-chip">
         <span class="chip-emoji">🦞</span>
-        <span class="chip-num">5400+</span>
+        <span class="chip-num" id="skillCount">36k+</span>
         <span>ClawHub Skills</span>
       </div>
       <div class="stat-chip">
@@ -1230,6 +1230,69 @@ function localEnhance(name, currentDesc, parsed) {
   return desc.trim().slice(0, 280);
 }
 
+// ── FETCH LIVE SKILL COUNT ─────────────────────────────────────────────
+async function fetchSkillCount() {
+  try {
+    const res = await fetch(`${PROXY}/stats`, { signal: AbortSignal.timeout(4000) });
+    if (!res.ok) return;
+    const data = await res.json();
+    const count = data.skillCount || data.count || data.total || data.skills;
+    if (count && typeof count === 'number') {
+      const el = document.getElementById('skillCount');
+      if (el) el.textContent = count > 1000 ? Math.round(count/1000) + 'k+' : count + '+';
+    }
+  } catch(e) { /* silently keep the default */ }
+}
+
+// Try search via proxy — handles multiple ClawHub API response shapes
+async function trySearch(q) {
+  // Strategy 1: /api/v1/skills?q= (vector search)
+  try {
+    const res = await fetch(`${PROXY}/search?q=${encodeURIComponent(q)}&limit=10`, {
+      signal: AbortSignal.timeout(8000)
+    });
+    if (res.ok) {
+      const data = await res.json();
+      const raw = extractSkillArray(data);
+      if (raw.length) return raw.map(normaliseSkill);
+    }
+  } catch(e) {}
+
+  // Strategy 2: /api/v1/skills?q= with nonSuspicious flag
+  try {
+    const res = await fetch(`${PROXY}/search?q=${encodeURIComponent(q)}&limit=10&nonSuspicious=true`, {
+      signal: AbortSignal.timeout(8000)
+    });
+    if (res.ok) {
+      const data = await res.json();
+      const raw = extractSkillArray(data);
+      if (raw.length) return raw.map(normaliseSkill);
+    }
+  } catch(e) {}
+
+  return [];
+}
+
+function extractSkillArray(data) {
+  if (Array.isArray(data))              return data;
+  if (Array.isArray(data.skills))       return data.skills;
+  if (Array.isArray(data.items))        return data.items;
+  if (Array.isArray(data.results))      return data.results;
+  if (Array.isArray(data.page))         return data.page;
+  if (data.data && Array.isArray(data.data)) return data.data;
+  return [];
+}
+
+function normaliseSkill(s) {
+  return {
+    name:        s.name || s.slug || s.id || 'unknown',
+    description: s.description || s.summary || s.shortDescription || '—',
+    stars:       s.stars ?? s.starCount ?? s.star_count ?? '?',
+    downloads:   s.downloads ?? s.downloadCount ?? s.download_count ?? s.installs ?? '?',
+    version:     s.latestVersion || s.version || s.latest_version || 'latest',
+  };
+}
+
 // ── SEARCH via Cloudflare Worker Proxy ─────────────────────────────────
 async function doSearch() {
   const q    = document.getElementById('searchQ').value.trim();
@@ -1240,29 +1303,8 @@ async function doSearch() {
   list.innerHTML = `<div class="empty-state"><span class="e-icon">⏳</span>Searching ClawHub...</div>`;
 
   try {
-    const res = await fetch(`${PROXY}/search?q=${encodeURIComponent(q)}&limit=10`, {
-      signal: AbortSignal.timeout(8000)
-    });
-    if (!res.ok) throw new Error('proxy returned ' + res.status);
-
-    const data = await res.json();
-
-    // ClawHub may wrap results differently — try all known shapes
-    let skills = [];
-    if (Array.isArray(data))              skills = data;
-    else if (Array.isArray(data.skills))  skills = data.skills;
-    else if (Array.isArray(data.items))   skills = data.items;
-    else if (Array.isArray(data.results)) skills = data.results;
-    else if (data.page)                   skills = data.page; // paginated
-
-    // Normalise field names — ClawHub uses different keys across API versions
-    skills = skills.map(s => ({
-      name:        s.name || s.slug || s.id || 'unknown',
-      description: s.description || s.summary || s.shortDescription || '—',
-      stars:       s.stars ?? s.starCount ?? s.star_count ?? '?',
-      downloads:   s.downloads ?? s.downloadCount ?? s.download_count ?? s.installs ?? '?',
-      version:     s.latestVersion || s.version || s.latest_version || 'latest',
-    }));
+    // Try search endpoint first, then browse as fallback
+    let skills = await trySearch(q);
 
     if (!skills.length) {
       list.innerHTML = `<div class="empty-state"><span class="e-icon">🤷</span>No results for "<strong>${esc(q)}</strong>"<div class="e-hint">Try: github, spotify, notion, stripe, slack</div></div>`;
@@ -1346,6 +1388,9 @@ async function reelIn(slug, ver, idx) {
     toast('Download failed — try manual upload', 'err');
   }
 }
+
+// Fetch live count on load
+fetchSkillCount();
 
 // ── UTILS ──────────────────────────────────────────────────────────────
 function esc(s) {
