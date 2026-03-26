@@ -1256,38 +1256,38 @@ let skillIndexFetching = false;
 async function loadSkillIndex() {
   if (skillIndexCache) return skillIndexCache;
   if (skillIndexFetching) {
-    // Wait for ongoing fetch
-    await new Promise(r => setTimeout(r, 300));
+    await new Promise(r => setTimeout(r, 400));
     return skillIndexCache;
   }
   skillIndexFetching = true;
   try {
-    // Raw README from the awesome-openclaw-skills repo — public, no auth
+    // Raw README — exact format: "skill-name - Description text here."
+    // One skill per line, alphabetically sorted
     const res = await fetch(
-      'https://raw.githubusercontent.com/VoltAgent/awesome-openclaw-skills/main/README.md',
-      { signal: AbortSignal.timeout(8000) }
+      'https://raw.githubusercontent.com/VoltAgent/awesome-openclaw-skills/refs/heads/main/README.md',
+      { signal: AbortSignal.timeout(10000) }
     );
-    if (!res.ok) throw new Error('GitHub ' + res.status);
+    if (!res.ok) throw new Error('GitHub fetch failed: ' + res.status);
     const text = await res.text();
 
-    // Parse lines like: "skill-name - Description of the skill."
     const skills = [];
-    const lines = text.split('\n');
-    for (const line of lines) {
-      const m = line.match(/^[-*]?\s*`?([a-z][a-z0-9-]{1,60})`?\s*[-–—]\s*(.{10,200})$/);
-      if (m) {
-        skills.push({
-          name:        m[1].trim(),
-          description: m[2].trim().replace(/\s+/g, ' '),
-          stars:       '?',
-          downloads:   '?',
-          version:     'latest',
-        });
-      }
+    for (const line of text.split('\n')) {
+      // Match: "skill-name - Description" or "- skill-name - Description"
+      // The README has lines like: "agenticcreed-signup-lead - Create a signup lead..."
+      const m = line.match(/^(?:[-*]\s+)?([a-z][a-z0-9-]{1,80})\s+-\s+(.{8,300})$/);
+      if (!m) continue;
+      const name = m[1].trim();
+      const desc = m[2].trim().replace(/\s+/g, ' ');
+      // Skip section headers, URLs, or things that look wrong
+      if (name.includes('http') || desc.startsWith('[') || desc.startsWith('(')) continue;
+      skills.push({ name, description: desc, stars: '?', downloads: '?', version: 'latest' });
     }
+
+    console.log('ClawToClaude: loaded', skills.length, 'skills from index');
     skillIndexCache = skills;
     return skills;
   } catch(e) {
+    console.warn('ClawToClaude: skill index load failed:', e.message);
     skillIndexFetching = false;
     return null;
   }
