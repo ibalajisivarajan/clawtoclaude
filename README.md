@@ -1,4 +1,4 @@
-# 🦞→🤖 ClawToClaud
+# 🦞→🤖 ClawToClaude
 
 > *Hauling ClawHub skills from the deep — surfacing them as Claude-ready `.skill` files*
 
@@ -8,7 +8,7 @@
 
 ```
   /\_/\   /\_/\
- ( o.o ) ( >.< )   🦞  C L A W T O C L A U D  🤖
+ ( o.o ) ( >.< )   🦞  C L A W T O C L A U D E  🤖
   > ^ <   > ^ <
  /|   |\ /|   |\    converting the depths to the cloud
 (_|   |_(_|   |_)
@@ -41,12 +41,12 @@
 ## How to use
 
 ### Option A — Live tool
-👉 **[ibalajisivarajan.github.io/clawtoclaud](https://ibalajisivarajan.github.io/clawtoclaud)**
+👉 **[ibalajisivarajan.github.io/clawtoclaude](https://ibalajisivarajan.github.io/clawtoclaude)**
 
 ### Option B — Run locally
 ```bash
-git clone https://github.com/ibalajisivarajan/clawtoclaud
-cd clawtoclaud
+git clone https://github.com/ibalajisivarajan/clawtoclaude
+cd clawtoclaude
 open index.html
 ```
 
@@ -63,7 +63,7 @@ spotify-player-1_0_0.zip
 └── _meta.json       ← ClawHub registry data (stripped 🗑)
 ```
 
-ClawToClaud:
+ClawToClaude:
 1. **Reads** the zip in your browser using JSZip
 2. **Parses** the `SKILL.md` frontmatter
 3. **Strips** `metadata: {clawdbot: ...}` (OpenClaw-only block)
@@ -76,7 +76,7 @@ ClawToClaud:
 
 ## Installing converted skills in Claude
 
-1. Download your `.skill` file from ClawToClaud
+1. Download your `.skill` file from ClawToClaude
 2. Open **Claude.ai → Settings → Skills**
 3. Click **Upload Skill**
 4. Done — Claude auto-loads it when relevant queries match
@@ -90,7 +90,7 @@ Some ClawHub skills require:
 - **Environment variables** — must be configured before use
 - **Shell/bash scripts** — work in Claude Code, limited in Claude.ai browser chat
 
-ClawToClaud flags all of these automatically so you're not surprised.
+ClawToClaude flags all of these automatically so you're not surprised.
 
 ---
 
@@ -118,7 +118,7 @@ ClawToClaud flags all of these automatically so you're not surprised.
 PRs welcome. Issues welcome. Lobster emoji encouraged.
 
 ```bash
-git clone https://github.com/ibalajisivarajan/clawtoclaud
+git clone https://github.com/ibalajisivarajan/clawtoclaude
 # edit index.html
 # open in browser
 # ship it
