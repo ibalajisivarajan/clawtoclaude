@@ -512,6 +512,24 @@ body::after {
 .btn-search:hover { background: var(--teal2); transform: translateY(-1px); }
 .btn-search:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
+.search-helper {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink3);
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  background: var(--white);
+  border: 2px solid var(--sand3);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+.search-helper a {
+  color: var(--teal);
+  text-decoration: none;
+  font-weight: 700;
+}
+.search-helper a:hover { text-decoration: underline; }
+
 /* Results */
 .results-list { display: flex; flex-direction: column; gap: 10px; }
 
@@ -827,8 +845,7 @@ footer {
       <div class="drop-title">Haul Your Skill Aboard!</div>
       <div class="drop-sub">
         Drag & drop or click to grab your zip<br>
-        Accepts <code>.skill</code> and <code>.zip</code> from
-        <a href="https://clawhub.ai" target="_blank" style="color:var(--teal);font-weight:700">clawhub.ai</a>
+        Accepts <code>.skill</code> and <code>.zip</code> files from ClawHub
       </div>
     </div>
 
@@ -884,6 +901,12 @@ footer {
         onkeydown="if(event.key==='Enter')doSearch()">
       <button class="btn-search" id="searchBtn" onclick="doSearch()">🔍 Search</button>
     </div>
+    <div class="search-helper">
+      Can't find what you need? &nbsp;
+      <a href="https://clawhub.ai" target="_blank">Browse clawhub.ai directly →</a>
+      &nbsp;then download the zip and use the Upload tab.
+    </div>
+
     <div class="results-list" id="resultsList">
       <div class="empty-state">
         <span class="e-icon">🦞</span>
@@ -1109,6 +1132,35 @@ function buildClaudeMd(p, desc) {
   return `---\n${lines.join('\n')}\n---\n\n${p.body || ''}`;
 }
 
+// ── DOWNLOAD ───────────────────────────────────────────────────────────
+async function downloadSkill() {
+  if (!currentZip || !currentParsed) {
+    toast('No skill loaded yet — upload a .skill zip first 😅', 'err');
+    return;
+  }
+  const desc  = document.getElementById('descTA').value;
+  const newMd = buildClaudeMd(currentParsed, desc);
+
+  const out  = new JSZip();
+  const jobs = [];
+  currentZip.forEach((path, file) => {
+    if (file.dir || path === '_meta.json' || path === 'SKILL.md') return;
+    jobs.push(file.async('arraybuffer').then(d => out.file(path, d)));
+  });
+  await Promise.all(jobs);
+  out.file('SKILL.md', newMd);
+
+  const blob = await out.generateAsync({ type: 'blob', compression: 'DEFLATE' });
+  const a    = Object.assign(document.createElement('a'), {
+    href:     URL.createObjectURL(blob),
+    download: currentSlug + '.skill'
+  });
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  toast('Downloaded: ' + currentSlug + '.skill 🎉', 'ok');
+}
+
 // ── CLOUDFLARE WORKER PROXY ───────────────────────────────────────────
 // Your deployed worker URL — update after deploying the worker
 const PROXY = 'https://clawtoclaude-proxy.alabinnexus.workers.dev';
@@ -1191,18 +1243,38 @@ async function doSearch() {
     const res = await fetch(`${PROXY}/search?q=${encodeURIComponent(q)}&limit=10`, {
       signal: AbortSignal.timeout(8000)
     });
-    if (!res.ok) throw new Error('proxy ' + res.status);
-    const data   = await res.json();
-    const skills = data.skills || data.items || data.results || (Array.isArray(data) ? data : []);
+    if (!res.ok) throw new Error('proxy returned ' + res.status);
+
+    const data = await res.json();
+
+    // ClawHub may wrap results differently — try all known shapes
+    let skills = [];
+    if (Array.isArray(data))              skills = data;
+    else if (Array.isArray(data.skills))  skills = data.skills;
+    else if (Array.isArray(data.items))   skills = data.items;
+    else if (Array.isArray(data.results)) skills = data.results;
+    else if (data.page)                   skills = data.page; // paginated
+
+    // Normalise field names — ClawHub uses different keys across API versions
+    skills = skills.map(s => ({
+      name:        s.name || s.slug || s.id || 'unknown',
+      description: s.description || s.summary || s.shortDescription || '—',
+      stars:       s.stars ?? s.starCount ?? s.star_count ?? '?',
+      downloads:   s.downloads ?? s.downloadCount ?? s.download_count ?? s.installs ?? '?',
+      version:     s.latestVersion || s.version || s.latest_version || 'latest',
+    }));
+
     if (!skills.length) {
       list.innerHTML = `<div class="empty-state"><span class="e-icon">🤷</span>No results for "<strong>${esc(q)}</strong>"<div class="e-hint">Try: github, spotify, notion, stripe, slack</div></div>`;
       return;
     }
     renderSkills(skills);
+
   } catch(e) {
+    // Proxy down or CORS issue — show curated fallback
     const fallback = getCuratedSkills(q);
     renderSkills(fallback);
-    toast('Proxy not set up yet — showing popular skills 🔧', '');
+    toast('Live search unavailable — showing popular skills 🔧', '');
   } finally {
     btn.disabled = false; btn.textContent = '🔍 Search';
   }
