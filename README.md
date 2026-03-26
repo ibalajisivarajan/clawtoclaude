@@ -2,13 +2,13 @@
 
 > *Hauling ClawHub skills from the deep — surfacing them as Claude-ready `.skill` files*
 
-**Live Tool →** [ibalajisivarajan.github.io/clawtoclaud](https://ibalajisivarajan.github.io/clawtoclaud)
+**Live Tool →** [ibalajisivarajan.github.io/clawtoclaude](https://ibalajisivarajan.github.io/clawtoclaude)
 
 ---
 
 ```
   /\_/\   /\_/\
- ( o.o ) ( >.< )   🦞  C L A W T O C L A U D E  🤖
+ ( o.o ) ( >.< )   🦞  C L A W T O C L A U D  🤖
   > ^ <   > ^ <
  /|   |\ /|   |\    converting the depths to the cloud
 (_|   |_(_|   |_)
@@ -22,7 +22,7 @@
 
 [Claude.ai](https://claude.ai) has its own skill system using the **exact same `SKILL.md` format** — but ClawHub skills carry registry-specific metadata (`clawdbot`, `_meta.json`) that Claude doesn't need, and descriptions optimised for OpenClaw's trigger model, not Claude's.
 
-**ClawToClaud bridges this.** Drop a ClawHub zip, get a Claude-ready `.skill` file. No server. No signup. 100% in your browser.
+**ClawToClaude bridges this.** Drop a ClawHub zip, get a Claude-ready `.skill` file. No server. No signup. 100% in your browser.
 
 ---
 
