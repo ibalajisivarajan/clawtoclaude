@@ -1244,53 +1244,91 @@ async function fetchSkillCount() {
   } catch(e) { /* silently keep the default */ }
 }
 
-// Try search via proxy — handles multiple ClawHub API response shapes
+// ── GITHUB-BASED SEARCH ────────────────────────────────────────────────
+// ClawHub's REST API requires Bearer token auth — can't call from browser.
+// Instead we use the awesome-openclaw-skills GitHub repo: a public,
+// CORS-free, always-updated index of 5400+ skills as plain text.
+// We fetch it once, cache it, then search locally — instant results.
+
+let skillIndexCache = null;
+let skillIndexFetching = false;
+
+async function loadSkillIndex() {
+  if (skillIndexCache) return skillIndexCache;
+  if (skillIndexFetching) {
+    // Wait for ongoing fetch
+    await new Promise(r => setTimeout(r, 300));
+    return skillIndexCache;
+  }
+  skillIndexFetching = true;
+  try {
+    // Raw README from the awesome-openclaw-skills repo — public, no auth
+    const res = await fetch(
+      'https://raw.githubusercontent.com/VoltAgent/awesome-openclaw-skills/main/README.md',
+      { signal: AbortSignal.timeout(8000) }
+    );
+    if (!res.ok) throw new Error('GitHub ' + res.status);
+    const text = await res.text();
+
+    // Parse lines like: "skill-name - Description of the skill."
+    const skills = [];
+    const lines = text.split('\n');
+    for (const line of lines) {
+      const m = line.match(/^[-*]?\s*`?([a-z][a-z0-9-]{1,60})`?\s*[-–—]\s*(.{10,200})$/);
+      if (m) {
+        skills.push({
+          name:        m[1].trim(),
+          description: m[2].trim().replace(/\s+/g, ' '),
+          stars:       '?',
+          downloads:   '?',
+          version:     'latest',
+        });
+      }
+    }
+    skillIndexCache = skills;
+    return skills;
+  } catch(e) {
+    skillIndexFetching = false;
+    return null;
+  }
+}
+
 async function trySearch(q) {
-  // Strategy 1: /api/v1/skills?q= (vector search)
-  try {
-    const res = await fetch(`${PROXY}/search?q=${encodeURIComponent(q)}&limit=10`, {
-      signal: AbortSignal.timeout(8000)
-    });
-    if (res.ok) {
-      const data = await res.json();
-      const raw = extractSkillArray(data);
-      if (raw.length) return raw.map(normaliseSkill);
-    }
-  } catch(e) {}
+  const ql = q.toLowerCase().trim();
+  if (!ql) return [];
 
-  // Strategy 2: /api/v1/skills?q= with nonSuspicious flag
-  try {
-    const res = await fetch(`${PROXY}/search?q=${encodeURIComponent(q)}&limit=10&nonSuspicious=true`, {
-      signal: AbortSignal.timeout(8000)
-    });
-    if (res.ok) {
-      const data = await res.json();
-      const raw = extractSkillArray(data);
-      if (raw.length) return raw.map(normaliseSkill);
-    }
-  } catch(e) {}
+  // Try GitHub index first
+  const index = await loadSkillIndex();
+  if (index && index.length > 0) {
+    // Score each skill: exact name match > name contains > description contains
+    const scored = index
+      .map(s => {
+        const name = s.name.toLowerCase();
+        const desc = s.description.toLowerCase();
+        let score = 0;
+        if (name === ql)             score = 100;
+        else if (name.startsWith(ql)) score = 80;
+        else if (name.includes(ql))  score = 60;
+        else if (desc.includes(ql))  score = 40;
+        // Also check individual words in query
+        const words = ql.split(/\s+/);
+        for (const w of words) {
+          if (w.length > 2) {
+            if (name.includes(w)) score = Math.max(score, 50);
+            if (desc.includes(w)) score = Math.max(score, 30);
+          }
+        }
+        return { ...s, score };
+      })
+      .filter(s => s.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 10);
 
+    if (scored.length > 0) return scored;
+  }
+
+  // Fallback to curated list
   return [];
-}
-
-function extractSkillArray(data) {
-  if (Array.isArray(data))              return data;
-  if (Array.isArray(data.skills))       return data.skills;
-  if (Array.isArray(data.items))        return data.items;
-  if (Array.isArray(data.results))      return data.results;
-  if (Array.isArray(data.page))         return data.page;
-  if (data.data && Array.isArray(data.data)) return data.data;
-  return [];
-}
-
-function normaliseSkill(s) {
-  return {
-    name:        s.name || s.slug || s.id || 'unknown',
-    description: s.description || s.summary || s.shortDescription || '—',
-    stars:       s.stars ?? s.starCount ?? s.star_count ?? '?',
-    downloads:   s.downloads ?? s.downloadCount ?? s.download_count ?? s.installs ?? '?',
-    version:     s.latestVersion || s.version || s.latest_version || 'latest',
-  };
 }
 
 // ── SEARCH via Cloudflare Worker Proxy ─────────────────────────────────
@@ -1300,7 +1338,7 @@ async function doSearch() {
   const btn  = document.getElementById('searchBtn');
   const list = document.getElementById('resultsList');
   btn.disabled = true; btn.textContent = '🔍 Searching...';
-  list.innerHTML = `<div class="empty-state"><span class="e-icon">⏳</span>Searching ClawHub...</div>`;
+  list.innerHTML = `<div class="empty-state"><span class="e-icon">⏳</span>Loading skill index...</div>`;
 
   try {
     // Try search endpoint first, then browse as fallback
@@ -1316,7 +1354,7 @@ async function doSearch() {
     // Proxy down or CORS issue — show curated fallback
     const fallback = getCuratedSkills(q);
     renderSkills(fallback);
-    toast('Live search unavailable — showing popular skills 🔧', '');
+    toast('Showing popular skills — try a broader search term 🔍', '');
   } finally {
     btn.disabled = false; btn.textContent = '🔍 Search';
   }
