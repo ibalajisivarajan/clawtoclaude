@@ -750,8 +750,8 @@ footer {
 
     <p class="hero-sub">
       Convert any <span class="hl-coral">ClawHub skill</span> to work with
-      <span class="hl-teal">Claude Code</span> the fastest way to extend
-      your AI agent
+      <span class="hl-teal">Claude Code</span> — the fastest way to extend
+      your AI agent with 36k+ community-built skills. 🦞
     </p>
 
     <div class="stat-row">
@@ -912,6 +912,8 @@ dz.addEventListener('drop', e => {
 // ── FILE HANDLER ───────────────────────────────────────────────────────
 async function handleFile(file) {
   if (!file) return;
+  // Reset file input so same file can be re-uploaded
+  document.getElementById('fileInput').value = '';
   try {
     const zip = await JSZip.loadAsync(file);
     await processZip(zip, file.name.replace(/\.(zip|skill)$/i, ''));
@@ -919,6 +921,15 @@ async function handleFile(file) {
 }
 
 async function processZip(zip, hint) {
+  // Reset all state upfront so previous skill data never bleeds into new skill
+  currentZip   = null;
+  currentParsed = null;
+  currentSlug  = null;
+  document.getElementById('descTA').value = '';
+  document.getElementById('codePreview').textContent = '—';
+  document.getElementById('resultCard').classList.remove('visible');
+  document.getElementById('compatBox').classList.remove('visible');
+
   currentZip = zip;
   const smFile = zip.file('SKILL.md') || zip.file(/SKILL\.md$/i)[0];
   if (!smFile) { toast('No SKILL.md found in this zip 🤔', 'err'); return; }
@@ -1101,7 +1112,9 @@ function enhanceDesc() {
 
 // Covers 20+ skill categories — pure JS, zero dependencies
 function localEnhance(name, currentDesc, parsed) {
-  const haystack = (name + ' ' + (parsed.body || '') + ' ' + (currentDesc || '')).toLowerCase();
+  // Haystack uses name + skill body only — NOT currentDesc (textarea value),
+  // because that may contain enhanced text from a previously loaded skill.
+  const haystack = (name + ' ' + (parsed.body || '') + ' ' + (parsed.description || '')).toLowerCase();
 
   const cats = [
     [/spotify|music|playlist|track|playback|song/,         'play, pause, skip, or search Spotify music'],
