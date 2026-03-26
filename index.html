@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClawToClaud 🦞→🤖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Fira+Code:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+:root {
+  --void: #020509;
+  --deep: #040d14;
+  --abyss: #071524;
+  --surface: #0a1e2e;
+  --surface2: #0d2438;
+  --rim: #0f3050;
+  --rim2: #164060;
+  --cyan: #00f5d4;
+  --cyan2: #00c4aa;
+  --cyan-dim: rgba(0,245,212,0.08);
+  --cyan-glow: rgba(0,245,212,0.2);
+  --coral: #ff6b6b;
+  --coral2: #ff8e8e;
+  --gold: #ffd166;
+  --text: #c8e8f0;
+  --text-dim: #4a7a90;
+  --text-mid: #7ab8cc;
+  --green: #06d6a0;
+  --orb: 'Orbitron', sans-serif;
+  --mono: 'Fira Code', monospace;
+  --smono: 'Space Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  color: var(--text);
+  font-family: var(--mono);
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: default;
+}
+
+/* ── OCEAN BACKGROUND ── */
+.ocean-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ocean-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 80%, rgba(0,100,120,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 20%, rgba(0,60,100,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(0,245,212,0.03) 0%, transparent 60%),
+    linear-gradient(180deg, #020509 0%, #040d14 40%, #071524 100%);
+}
+
+/* Scanlines */
+.ocean-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,245,212,0.012) 2px,
+    rgba(0,245,212,0.012) 4px
+  );
+  pointer-events: none;
+}
+
+/* Animated bubbles */
+.bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(0,245,212,0.35), rgba(0,245,212,0.05));
+  border: 1px solid rgba(0,245,212,0.2);
+  animation: rise linear infinite;
+}
+
+@keyframes rise {
+  0% { transform: translateY(100vh) translateX(0) scale(1); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 0.6; }
+  100% { transform: translateY(-120px) translateX(30px) scale(0.6); opacity: 0; }
+}
+
+/* ── LAYOUT ── */
+.wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 20px 100px;
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 60px 0 44px;
+  text-align: center;
+  position: relative;
+}
+
+.ascii-crab {
+  font-family: var(--smono);
+  font-size: clamp(9px, 1.8vw, 13px);
+  line-height: 1.3;
+  color: var(--cyan2);
+  text-shadow: 0 0 12px rgba(0,245,212,0.5);
+  margin-bottom: 28px;
+  white-space: pre;
+  letter-spacing: 0.5px;
+  animation: glowPulse 3s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes glowPulse {
+  0%, 100% { text-shadow: 0 0 10px rgba(0,245,212,0.4), 0 0 20px rgba(0,245,212,0.2); }
+  50% { text-shadow: 0 0 20px rgba(0,245,212,0.7), 0 0 40px rgba(0,245,212,0.35), 0 0 60px rgba(0,245,212,0.15); }
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--cyan-dim);
+  border: 1px solid rgba(0,245,212,0.25);
+  border-radius: 100px;
+  padding: 6px 16px;
+  font-family: var(--smono);
+  font-size: 11px;
+  color: var(--cyan2);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.hero-badge::before { content: '▸'; }
+
+h1 {
+  font-family: var(--orb);
+  font-size: clamp(32px, 7vw, 64px);
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+h1 .claw { color: var(--coral); text-shadow: 0 0 30px rgba(255,107,107,0.5); }
+h1 .arrow { color: var(--text-dim); font-size: 0.6em; vertical-align: middle; }
+h1 .claud { color: var(--cyan); text-shadow: 0 0 30px rgba(0,245,212,0.5); }
+
+.hero-sub {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-top: 14px;
+  letter-spacing: 0.3px;
+  line-height: 1.7;
+}
+
+.hero-sub .hl { color: var(--cyan2); }
+
+/* Terminal blink cursor */
+.blink {
+  display: inline-block;
+  width: 8px;
+  height: 14px;
+  background: var(--cyan);
+  margin-left: 3px;
+  vertical-align: middle;
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ── DEPTH METER ── */
+.depth-bar {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin: 28px 0 0;
+  font-family: var(--smono);
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+}
+
+.depth-stat { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.depth-val { font-size: 16px; font-weight: 700; color: var(--cyan2); font-family: var(--orb); }
+.depth-sep { color: var(--rim2); }
+
+/* ── TABS ── */
+.sonar-tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 28px;
+  background: var(--abyss);
+  border: 1px solid var(--rim);
+  border-radius: 12px;
+  padding: 4px;
+}
+
+.sonar-tab {
+  flex: 1;
+  padding: 12px 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+  font-family: var(--smono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.sonar-tab:hover { color: var(--text-mid); background: var(--surface); }
+
+.sonar-tab.active {
+  background: linear-gradient(135deg, rgba(0,245,212,0.12), rgba(0,100,120,0.15));
+  color: var(--cyan);
+  border: 1px solid rgba(0,245,212,0.25);
+  text-shadow: 0 0 10px rgba(0,245,212,0.4);
+}
+
+/* ── PANELS ── */
+.panel { display: none; }
+.panel.active { display: block; animation: dive 0.25s ease; }
+
+@keyframes dive {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── SONAR LABEL ── */
+.sonar-label {
+  font-family: var(--smono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sonar-label::before {
+  content: '';
+  flex: 0 0 20px;
+  height: 1px;
+  background: var(--rim2);
+}
+.sonar-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rim2);
+}
+
+/* ── DROP ZONE ── */
+.drop-zone {
+  border: 2px dashed var(--rim2);
+  border-radius: 16px;
+  padding: 60px 32px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  background: var(--abyss);
+  transition: all 0.25s ease;
+  overflow: hidden;
+}
+
+.drop-zone::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 120%, rgba(0,245,212,0.06), transparent 60%);
+  pointer-events: none;
+}
+
+.drop-zone:hover, .drop-zone.drag-over {
+  border-color: var(--cyan);
+  background: var(--surface);
+  box-shadow: 0 0 40px rgba(0,245,212,0.1), inset 0 0 40px rgba(0,245,212,0.04);
+}
+
+.drop-zone input[type="file"] {
+  position: absolute; inset: 0;
+  opacity: 0; cursor: pointer;
+  width: 100%; height: 100%;
+}
+
+.drop-icon {
+  font-size: 52px;
+  margin-bottom: 16px;
+  display: block;
+  filter: drop-shadow(0 0 12px rgba(0,245,212,0.4));
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.drop-title {
+  font-family: var(--orb);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.drop-sub {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+.drop-sub code {
+  color: var(--cyan2);
+  background: var(--cyan-dim);
+  padding: 1px 6px;
+  border-radius: 3px;
+  border: 1px solid rgba(0,245,212,0.2);
+}
+
+/* ── CAPTURE CARD ── */
+.capture-card {
+  display: none;
+  background: var(--abyss);
+  border: 1px solid var(--rim);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+.capture-card.visible { display: block; animation: dive 0.3s ease; }
+
+.capture-header {
+  background: linear-gradient(90deg, var(--surface2), var(--abyss));
+  border-bottom: 1px solid var(--rim);
+  padding: 16px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.capture-title {
+  font-family: var(--orb);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--cyan);
+  text-shadow: 0 0 12px rgba(0,245,212,0.4);
+  letter-spacing: 1px;
+}
+
+.capture-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  display: flex;
+  gap: 12px;
+  margin-top: 3px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  font-family: var(--smono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+
+.chip-ok { background: rgba(6,214,160,0.1); color: var(--green); border: 1px solid rgba(6,214,160,0.3); }
+.chip-warn { background: rgba(255,209,102,0.1); color: var(--gold); border: 1px solid rgba(255,209,102,0.3); }
+
+.capture-body { padding: 20px 22px; }
+
+/* Compat warnings */
+.compat-panel {
+  display: none;
+  background: rgba(255,209,102,0.06);
+  border: 1px solid rgba(255,209,102,0.2);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+}
+.compat-panel.visible { display: block; }
+.compat-head {
+  font-family: var(--smono);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.compat-item {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-mid);
+  line-height: 1.6;
+  padding: 3px 0;
+  padding-left: 14px;
+  position: relative;
+}
+.compat-item::before { content: '⚠'; position: absolute; left: 0; color: var(--gold); }
+
+/* Field */
+.field { margin-bottom: 18px; }
+
+.field-label {
+  font-family: var(--smono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.field-box {
+  background: var(--deep);
+  border: 1px solid var(--rim);
+  border-radius: 8px;
+  padding: 12px 14px;
+  position: relative;
+  transition: border-color 0.15s;
+}
+.field-box:focus-within { border-color: rgba(0,245,212,0.4); box-shadow: 0 0 0 2px rgba(0,245,212,0.06); }
+
+.field-box textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.65;
+  resize: vertical;
+  min-height: 70px;
+}
+
+.field-box textarea::placeholder { color: var(--text-dim); }
+
+/* Enhance row */
+.enhance-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 9px;
+  flex-wrap: wrap;
+}
+
+.btn-enhance {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  background: linear-gradient(135deg, rgba(0,245,212,0.1), rgba(0,100,120,0.15));
+  border: 1px solid rgba(0,245,212,0.3);
+  border-radius: 8px;
+  color: var(--cyan);
+  font-family: var(--smono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.btn-enhance:hover { background: rgba(0,245,212,0.15); box-shadow: 0 0 16px rgba(0,245,212,0.15); }
+.btn-enhance:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-enhance .sparkle { font-size: 13px; }
+
+.enhance-status {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+/* Preview code block */
+.code-preview {
+  background: var(--void);
+  border: 1px solid var(--rim);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.7;
+  max-height: 180px;
+  overflow-y: auto;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.code-preview .fm-key { color: var(--coral2); }
+.code-preview .fm-val { color: var(--cyan2); }
+.code-preview .fm-sep { color: var(--text-dim); }
+
+/* Download button */
+.btn-dive {
+  width: 100%;
+  margin-top: 20px;
+  padding: 18px;
+  background: linear-gradient(135deg, rgba(0,245,212,0.15), rgba(0,100,120,0.2));
+  border: 1px solid rgba(0,245,212,0.4);
+  border-radius: 12px;
+  color: var(--cyan);
+  font-family: var(--orb);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-dive::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(0,245,212,0.08), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+
+.btn-dive:hover::before { transform: translateX(100%); }
+.btn-dive:hover {
+  box-shadow: 0 0 30px rgba(0,245,212,0.2), 0 0 60px rgba(0,245,212,0.08);
+  background: linear-gradient(135deg, rgba(0,245,212,0.2), rgba(0,100,120,0.28));
+}
+
+.btn-dive .filename {
+  font-family: var(--mono);
+  font-size: 10px;
+  opacity: 0.55;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* ── SEARCH PANEL ── */
+.sonar-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.sonar-input {
+  flex: 1;
+  background: var(--abyss);
+  border: 1px solid var(--rim2);
+  border-radius: 10px;
+  padding: 14px 18px;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13px;
+  outline: none;
+  transition: all 0.15s;
+}
+.sonar-input:focus {
+  border-color: rgba(0,245,212,0.4);
+  box-shadow: 0 0 0 2px rgba(0,245,212,0.06), 0 0 20px rgba(0,245,212,0.08);
+}
+.sonar-input::placeholder { color: var(--text-dim); }
+
+.btn-sonar {
+  padding: 14px 22px;
+  background: linear-gradient(135deg, rgba(0,245,212,0.15), rgba(0,100,120,0.2));
+  border: 1px solid rgba(0,245,212,0.35);
+  border-radius: 10px;
+  color: var(--cyan);
+  font-family: var(--smono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.btn-sonar:hover { box-shadow: 0 0 20px rgba(0,245,212,0.15); }
+.btn-sonar:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* results */
+.echo-grid { display: flex; flex-direction: column; gap: 8px; }
+
+.echo-card {
+  background: var(--abyss);
+  border: 1px solid var(--rim);
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.echo-card:hover {
+  border-color: rgba(0,245,212,0.3);
+  background: var(--surface);
+  box-shadow: 0 0 20px rgba(0,245,212,0.06);
+}
+
+.echo-name {
+  font-family: var(--smono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--cyan2);
+  margin-bottom: 4px;
+}
+.echo-desc {
+  font-size: 12px;
+  color: var(--text-mid);
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.echo-stats {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 6px;
+  display: flex;
+  gap: 12px;
+}
+
+.btn-reel {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid var(--rim2);
+  border-radius: 7px;
+  color: var(--text-dim);
+  font-family: var(--smono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.btn-reel:hover { border-color: var(--cyan2); color: var(--cyan); background: var(--cyan-dim); }
+.btn-reel.done { border-color: rgba(6,214,160,0.4); color: var(--green); background: rgba(6,214,160,0.08); cursor: default; }
+.btn-reel.loading { opacity: 0.4; cursor: not-allowed; }
+
+/* Empty state */
+.empty-echo {
+  text-align: center;
+  padding: 52px 24px;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+.empty-echo .e-icon { font-size: 36px; margin-bottom: 14px; display: block; opacity: 0.7; }
+.empty-echo .e-hint { margin-top: 8px; color: var(--text-dim); font-size: 11px; }
+
+/* ── SPINNER ── */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin {
+  display: inline-block;
+  width: 13px; height: 13px;
+  border: 2px solid rgba(0,245,212,0.2);
+  border-top-color: var(--cyan);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+/* ── TOASTS ── */
+.toast-bay {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  display: flex; flex-direction: column; gap: 8px;
+  z-index: 999;
+}
+
+.toast {
+  background: var(--surface2);
+  border: 1px solid var(--rim2);
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-family: var(--smono);
+  font-size: 11px;
+  color: var(--text);
+  animation: surfacing 0.25s ease;
+  display: flex; align-items: center; gap: 10px;
+  max-width: 300px;
+  letter-spacing: 0.5px;
+}
+.toast.ok { border-color: rgba(6,214,160,0.35); color: var(--green); }
+.toast.err { border-color: rgba(255,107,107,0.35); color: var(--coral2); }
+
+@keyframes surfacing {
+  from { opacity: 0; transform: translateY(12px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ── HOW IT WORKS ── */
+.how-section {
+  margin-top: 52px;
+  padding-top: 32px;
+  border-top: 1px solid var(--rim);
+}
+
+.how-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.how-card {
+  background: var(--abyss);
+  border: 1px solid var(--rim);
+  border-radius: 12px;
+  padding: 20px;
+  transition: border-color 0.15s;
+}
+.how-card:hover { border-color: rgba(0,245,212,0.2); }
+
+.how-num {
+  font-family: var(--orb);
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--rim2);
+  margin-bottom: 10px;
+  line-height: 1;
+}
+
+.how-title {
+  font-family: var(--smono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--cyan2);
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.how-body {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.65;
+}
+
+/* ── FOOTER ── */
+footer {
+  margin-top: 64px;
+  padding: 24px 0;
+  border-top: 1px solid var(--rim);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.footer-brand {
+  font-family: var(--orb);
+  font-size: 12px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+}
+.footer-brand span { color: var(--cyan2); }
+
+.footer-links {
+  display: flex;
+  gap: 16px;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+.footer-links a {
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.footer-links a:hover { color: var(--cyan2); }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--void); }
+::-webkit-scrollbar-thumb { background: var(--rim2); border-radius: 3px; }
+
+/* responsive */
+@media (max-width: 580px) {
+  .sonar-tabs { flex-direction: column; }
+  .sonar-row { flex-direction: column; }
+  .capture-header { flex-direction: column; align-items: flex-start; }
+  .echo-card { flex-direction: column; }
+  .btn-reel { width: 100%; text-align: center; }
+  .depth-bar { gap: 14px; }
+  .ascii-crab { font-size: 7px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ocean background -->
+<div class="ocean-bg" id="oceanBg"></div>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <pre class="ascii-crab">
+  /\_/\   /\_/\
+ ( o.o ) ( >.< )   🦞  C L A W T O C L A U D  🤖
+  > ^ <   > ^ <
+ /|   |\ /|   |\    converting the depths to the cloud
+(_|   |_(_|   |_)
+    </pre>
+
+    <div class="hero-badge">deep sea skill converter</div>
+
+    <h1>
+      <span class="claw">CLAW</span>
+      <span class="arrow"> ⟶ </span>
+      <span class="claud">CLAUD</span>
+    </h1>
+
+    <p class="hero-sub">
+      Haul <span class="hl">ClawHub skills</span> from the deep · convert to
+      <span class="hl">Claude.ai .skill files</span> · deploy to the cloud<span class="blink"></span>
+    </p>
+
+    <div class="depth-bar">
+      <div class="depth-stat">
+        <span class="depth-val">5400+</span>
+        <span>CLAWHUB SKILLS</span>
+      </div>
+      <span class="depth-sep">|</span>
+      <div class="depth-stat">
+        <span class="depth-val">0sec</span>
+        <span>CONVERSION TIME</span>
+      </div>
+      <span class="depth-sep">|</span>
+      <div class="depth-stat">
+        <span class="depth-val">100%</span>
+        <span>BROWSER-SIDE</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="sonar-tabs">
+    <button class="sonar-tab active" onclick="switchTab('upload')" id="tab-upload">
+      📦 &nbsp;Upload &amp; Convert
+    </button>
+    <button class="sonar-tab" onclick="switchTab('search')" id="tab-search">
+      📡 &nbsp;Sonar Search
+    </button>
+  </div>
+
+  <!-- UPLOAD PANEL -->
+  <div class="panel active" id="panel-upload">
+    <div class="sonar-label">Drop your clawhub .skill zip</div>
+
+    <div class="drop-zone" id="dropZone">
+      <input type="file" accept=".zip,.skill" id="fileInput" onchange="handleFile(this.files[0])">
+      <span class="drop-icon">🦞</span>
+      <div class="drop-title">HAUL YOUR SKILL ABOARD</div>
+      <div class="drop-sub">
+        Drag &amp; drop or click to fish out your zip<br>
+        Accepts <code>.skill</code> and <code>.zip</code> files from
+        <a href="https://clawhub.ai" target="_blank" style="color:var(--cyan2);text-decoration:none">clawhub.ai</a>
+      </div>
+    </div>
+
+    <!-- RESULT CARD -->
+    <div class="capture-card" id="captureCard">
+      <div class="capture-header">
+        <div>
+          <div class="capture-title" id="capName">—</div>
+          <div class="capture-meta">
+            <span id="capFiles">—</span>
+            <span>·</span>
+            <span id="capVersion">—</span>
+          </div>
+        </div>
+        <div id="capChip"></div>
+      </div>
+
+      <div class="capture-body">
+
+        <!-- compat -->
+        <div class="compat-panel" id="compatPanel">
+          <div class="compat-head">⚠ Compatibility Depth Check</div>
+          <div id="compatList"></div>
+        </div>
+
+        <!-- description -->
+        <div class="field">
+          <div class="field-label">Claude Trigger Description</div>
+          <div class="field-box">
+            <textarea id="descTA" rows="3" placeholder="Description will load here..."></textarea>
+          </div>
+          <div class="enhance-row">
+            <button class="btn-enhance" id="enhanceBtn" onclick="enhanceDescription()">
+              <span class="sparkle">✦</span>
+              <span class="spin" id="enhSpin" style="display:none"></span>
+              Enhance with Claude AI
+            </button>
+            <span class="enhance-status" id="enhStatus">Rewrites desc for better Claude triggering</span>
+          </div>
+        </div>
+
+        <!-- preview -->
+        <div class="field">
+          <div class="field-label">SKILL.md Preview</div>
+          <div class="code-preview" id="codePreview">—</div>
+        </div>
+
+        <button class="btn-dive" id="dlBtn" onclick="downloadSkill()">
+          <span>⬇ SURFACE AS .SKILL FILE</span>
+          <span class="filename" id="dlName"></span>
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- SEARCH PANEL -->
+  <div class="panel" id="panel-search">
+    <div class="sonar-label">Ping the ClawHub registry</div>
+
+    <div class="sonar-row">
+      <input class="sonar-input" id="searchQ"
+        placeholder="ping... e.g. github, spotify, notion, stripe"
+        onkeydown="if(event.key==='Enter')doSearch()">
+      <button class="btn-sonar" id="searchBtn" onclick="doSearch()">📡 SONAR</button>
+    </div>
+
+    <div class="echo-grid" id="echoGrid">
+      <div class="empty-echo">
+        <span class="e-icon">📡</span>
+        Send a sonar ping to discover ClawHub skills.<br>
+        <span class="e-hint">Results stream in from clawhub.ai · convert any skill in one click</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="how-section">
+    <div class="sonar-label">How the dive works</div>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-num">01</div>
+        <div class="how-title">Haul the Zip</div>
+        <div class="how-body">Drop your ClawHub <code style="color:var(--cyan2)">.skill</code> zip or search the registry directly. No server required — runs 100% in your browser.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">02</div>
+        <div class="how-title">Strip & Clean</div>
+        <div class="how-body">ClawHub-specific <code style="color:var(--coral2)">metadata: {clawdbot:...}</code> is removed. <code style="color:var(--cyan2)">_meta.json</code> is tossed overboard. SKILL.md is preserved.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">03</div>
+        <div class="how-title">Claude Optimise</div>
+        <div class="how-body">Claude AI rewrites the description so it triggers correctly in Claude.ai. Compat warnings flag shell/CLI dependencies.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">04</div>
+        <div class="how-title">Deploy to Claude</div>
+        <div class="how-body">Download the <code style="color:var(--cyan2)">.skill</code> file → Claude.ai → Settings → Skills → Upload. You're live.</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-brand">
+      🦞 <span>CLAWTOCLAUD</span> · open source
+    </div>
+    <div class="footer-links">
+      <a href="https://github.com/ibalajisivarajan/clawtoclaud" target="_blank">GitHub</a>
+      <a href="https://clawhub.ai" target="_blank">ClawHub</a>
+      <a href="https://claude.ai" target="_blank">Claude.ai</a>
+    </div>
+  </footer>
+
+</div>
+
+<div class="toast-bay" id="toastBay"></div>
+
+<script>
+// ── BUBBLES ──────────────────────────────────────────────────────────
+(function spawnBubbles() {
+  const bg = document.getElementById('oceanBg');
+  for (let i = 0; i < 22; i++) {
+    const b = document.createElement('div');
+    b.className = 'bubble';
+    const sz = 3 + Math.random() * 10;
+    b.style.cssText = `
+      width:${sz}px; height:${sz}px;
+      left:${Math.random()*100}%;
+      bottom:${-10 - Math.random()*20}px;
+      animation-duration:${8 + Math.random()*16}s;
+      animation-delay:${-Math.random()*20}s;
+      opacity:${0.2 + Math.random()*0.5};
+    `;
+    bg.appendChild(b);
+  }
+})();
+
+// ── STATE ─────────────────────────────────────────────────────────────
+let currentZip = null;
+let currentParsed = null;
+let currentSlug = null;
+
+// ── TABS ──────────────────────────────────────────────────────────────
+function switchTab(t) {
+  document.querySelectorAll('.sonar-tab').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(e => e.classList.remove('active'));
+  document.getElementById('tab-' + t).classList.add('active');
+  document.getElementById('panel-' + t).classList.add('active');
+}
+
+// ── DRAG & DROP ───────────────────────────────────────────────────────
+const dz = document.getElementById('dropZone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+dz.addEventListener('drop', e => {
+  e.preventDefault(); dz.classList.remove('drag-over');
+  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+
+// ── FILE HANDLER ──────────────────────────────────────────────────────
+async function handleFile(file) {
+  if (!file) return;
+  try {
+    const zip = await JSZip.loadAsync(file);
+    await processZip(zip, file.name.replace(/\.(zip|skill)$/i, ''));
+  } catch(e) { toast('Failed to read zip: ' + e.message, 'err'); }
+}
+
+async function processZip(zip, hint) {
+  currentZip = zip;
+
+  const smFile = zip.file('SKILL.md') || zip.file(/SKILL\.md$/i)[0];
+  if (!smFile) { toast('No SKILL.md found in zip', 'err'); return; }
+
+  const raw = await smFile.async('string');
+  const parsed = parseSkillMd(raw);
+
+  let meta = null;
+  const mf = zip.file('_meta.json');
+  if (mf) { try { meta = JSON.parse(await mf.async('string')); } catch(e){} }
+
+  const slug = parsed.name || meta?.slug || hint || 'skill';
+  currentSlug = slug;
+  currentParsed = parsed;
+
+  // populate UI
+  document.getElementById('capName').textContent = slug;
+  document.getElementById('capVersion').textContent = 'v' + (meta?.version || '1.0.0');
+  const files = Object.keys(zip.files).filter(f => !f.endsWith('/')).join(', ');
+  document.getElementById('capFiles').textContent = files;
+  document.getElementById('descTA').value = parsed.description || '';
+  document.getElementById('dlName').textContent = slug + '.skill';
+
+  renderCodePreview(parsed, parsed.description || '');
+  checkCompat(parsed);
+
+  document.getElementById('captureCard').classList.add('visible');
+  toast('✓ Skill captured: ' + slug, 'ok');
+}
+
+// ── PARSER ────────────────────────────────────────────────────────────
+function parseSkillMd(raw) {
+  const fm = raw.match(/^---\n([\s\S]*?)\n---/);
+  if (!fm) return { body: raw };
+
+  const block = fm[1];
+  const body = raw.slice(fm[0].length).trim();
+
+  const get = k => {
+    const m = block.match(new RegExp(`^${k}:\\s*(.+)$`, 'm'));
+    return m ? m[1].trim().replace(/^["']|["']$/g, '') : '';
+  };
+
+  const envs = [...block.matchAll(/"env"\s*:\s*\[(.*?)\]/g)]
+    .flatMap(m => m[1].split(',').map(s => s.trim().replace(/['"]/g,''))).filter(Boolean);
+  const bins = [...block.matchAll(/"anyBins"\s*:\s*\[(.*?)\]/g)]
+    .flatMap(m => m[1].split(',').map(s => s.trim().replace(/['"]/g,''))).filter(Boolean);
+
+  return { name: get('name'), description: get('description'), homepage: get('homepage'),
+           rawFm: block, body, requiresEnv: envs, requiresBins: bins };
+}
+
+// ── COMPAT CHECK ──────────────────────────────────────────────────────
+function checkCompat(p) {
+  const warns = [];
+  if (p.requiresBins?.length)
+    warns.push('Requires CLI tools: ' + p.requiresBins.join(', ') + ' — not available in Claude.ai browser chat');
+  if (p.requiresEnv?.length)
+    warns.push('Needs env vars: ' + p.requiresEnv.join(', ') + ' — configure before use');
+  if (/bash|shell|#!/i.test(p.body))
+    warns.push('Contains shell/bash commands — works in Claude Code, limited in Claude.ai chat');
+
+  const panel = document.getElementById('compatPanel');
+  const list = document.getElementById('compatList');
+  list.innerHTML = warns.map(w => `<div class="compat-item">${esc(w)}</div>`).join('');
+
+  if (warns.length) {
+    panel.classList.add('visible');
+    document.getElementById('capChip').innerHTML = '<span class="chip chip-warn">⚠ CHECK COMPAT</span>';
+  } else {
+    panel.classList.remove('visible');
+    document.getElementById('capChip').innerHTML = '<span class="chip chip-ok">✓ CLAUDE READY</span>';
+  }
+}
+
+// ── CODE PREVIEW ──────────────────────────────────────────────────────
+function renderCodePreview(p, desc) {
+  const md = buildClaudeMd(p, desc);
+  // Simple syntax highlight
+  const highlighted = md
+    .replace(/^(---)/gm, '<span style="color:var(--rim2)">$1</span>')
+    .replace(/^(name|description|homepage|compatibility)(:)/gm,
+             '<span class="fm-key">$1</span><span class="fm-sep">$2</span>')
+    .replace(/^(#+ .+)$/gm, '<span style="color:var(--gold)">$1</span>');
+  document.getElementById('codePreview').innerHTML = highlighted.slice(0, 900) + (md.length > 900 ? '\n…' : '');
+}
+
+// ── BUILD CLAUDE MD ───────────────────────────────────────────────────
+function buildClaudeMd(p, desc) {
+  let fm = (p.rawFm || '')
+    .replace(/^metadata:[\s\S]*?(?=\n\w|\n---)/m, '')  // strip clawdbot metadata block
+    .replace(/\n{3,}/g, '\n\n').trim();
+
+  if (/^description:/m.test(fm)) {
+    fm = fm.replace(/^description:.*$/m, `description: "${desc.replace(/"/g, '\\"')}"`);
+  } else {
+    fm = `description: "${desc.replace(/"/g, '\\"')}"\n` + fm;
+  }
+
+  return `---\n${fm}\n---\n\n${p.body || ''}`;
+}
+
+// ── AI ENHANCE ────────────────────────────────────────────────────────
+async function enhanceDescription() {
+  if (!currentParsed) return;
+  const btn = document.getElementById('enhanceBtn');
+  const spin = document.getElementById('enhSpin');
+  const status = document.getElementById('enhStatus');
+
+  btn.disabled = true; spin.style.display = 'inline-block';
+  status.textContent = '🌊 Asking Claude...';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: `You are a Claude skill description optimizer. Rewrite skill descriptions so they trigger Claude correctly.
+
+Rules:
+- Under 55 words
+- State WHEN to trigger (specific phrases, user intents, file types)
+- State WHAT it does
+- Be slightly "pushy" — use the skill when even loosely relevant
+- Natural language, no bullet points
+- Return ONLY the new description. No quotes, no explanation.`,
+        messages: [{ role: 'user', content:
+          `Skill: ${currentSlug}\nCurrent desc: ${document.getElementById('descTA').value}\nBody preview: ${(currentParsed.body||'').slice(0,500)}\n\nWrite enhanced Claude trigger description.`
+        }]
+      })
+    });
+
+    const data = await res.json();
+    const enhanced = data.content?.[0]?.text?.trim();
+    if (enhanced) {
+      document.getElementById('descTA').value = enhanced;
+      renderCodePreview(currentParsed, enhanced);
+      status.textContent = '✓ Enhanced! Edit if needed.';
+      toast('✓ Description enhanced by Claude', 'ok');
+    } else {
+      status.textContent = 'No response — try again';
+    }
+  } catch(e) {
+    status.textContent = 'Error: ' + e.message;
+    toast('Enhancement failed', 'err');
+  } finally {
+    btn.disabled = false; spin.style.display = 'none';
+  }
+}
+
+// ── LIVE PREVIEW UPDATE ───────────────────────────────────────────────
+document.getElementById('descTA').addEventListener('input', () => {
+  if (currentParsed) renderCodePreview(currentParsed, document.getElementById('descTA').value);
+});
+
+// ── DOWNLOAD ──────────────────────────────────────────────────────────
+async function downloadSkill() {
+  if (!currentZip || !currentParsed) return;
+  const desc = document.getElementById('descTA').value;
+  const newMd = buildClaudeMd(currentParsed, desc);
+
+  const out = new JSZip();
+  const jobs = [];
+
+  currentZip.forEach((path, file) => {
+    if (file.dir || path === '_meta.json' || path === 'SKILL.md') return;
+    jobs.push(file.async('arraybuffer').then(d => out.file(path, d)));
+  });
+
+  await Promise.all(jobs);
+  out.file('SKILL.md', newMd);
+
+  const blob = await out.generateAsync({ type: 'blob', compression: 'DEFLATE' });
+  const a = Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(blob),
+    download: currentSlug + '.skill'
+  });
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('✓ Surfaced: ' + currentSlug + '.skill', 'ok');
+}
+
+// ── SEARCH ────────────────────────────────────────────────────────────
+async function doSearch() {
+  const q = document.getElementById('searchQ').value.trim();
+  if (!q) return;
+
+  const btn = document.getElementById('searchBtn');
+  const grid = document.getElementById('echoGrid');
+  btn.disabled = true; btn.textContent = '📡 PINGING...';
+  grid.innerHTML = `<div class="empty-echo"><span class="spin" style="width:28px;height:28px;display:block;margin:0 auto 16px"></span>Scanning clawhub.ai depths...</div>`;
+
+  try {
+    const skills = await fetchClawHub(q);
+    if (!skills?.length) {
+      grid.innerHTML = `<div class="empty-echo"><span class="e-icon">🔕</span>No echo for "${esc(q)}" — try different terms<span class="e-hint">e.g. "github", "stripe", "calendar"</span></div>`;
+      return;
+    }
+    renderEchos(skills);
+  } catch(e) {
+    grid.innerHTML = `<div class="empty-echo">
+      <span class="e-icon">🌊</span>
+      Sonar blocked by CORS — ClawHub API isn't reachable from the browser directly.<br><br>
+      <span class="e-hint">
+        <strong style="color:var(--cyan2)">Workaround:</strong> Browse
+        <a href="https://clawhub.ai" target="_blank" style="color:var(--cyan2)">clawhub.ai</a>,
+        download the .skill zip, then use the <strong>Upload tab</strong> above.
+      </span>
+    </div>`;
+  } finally {
+    btn.disabled = false; btn.textContent = '📡 SONAR';
+  }
+}
+
+async function fetchClawHub(q) {
+  const urls = [
+    `https://clawhub.ai/api/v1/skills?q=${encodeURIComponent(q)}&limit=10`,
+    `https://api.clawhub.ai/v1/skills?q=${encodeURIComponent(q)}&limit=10`
+  ];
+  for (const url of urls) {
+    try {
+      const r = await fetch(url, { headers: { Accept: 'application/json' }, signal: AbortSignal.timeout(6000) });
+      if (r.ok) {
+        const d = await r.json();
+        const items = d.skills || d.items || d.results || (Array.isArray(d) ? d : []);
+        if (items.length) return items;
+      }
+    } catch(e) {}
+  }
+  throw new Error('CORS blocked');
+}
+
+function renderEchos(skills) {
+  const grid = document.getElementById('echoGrid');
+  grid.innerHTML = '';
+  skills.forEach((s, i) => {
+    const name = s.name || s.slug || 'unknown';
+    const desc = s.description || s.summary || '—';
+    const stars = s.stars ?? s.starCount ?? '?';
+    const dl = s.downloads ?? s.downloadCount ?? '?';
+    const ver = s.latestVersion || s.version || 'latest';
+
+    const card = document.createElement('div');
+    card.className = 'echo-card'; card.id = 'echo-' + i;
+    card.innerHTML = `
+      <div style="flex:1;min-width:0">
+        <div class="echo-name">${esc(name)}</div>
+        <div class="echo-desc">${esc(desc)}</div>
+        <div class="echo-stats"><span>⭐ ${stars}</span><span>⬇ ${dl}</span><span>v${esc(String(ver))}</span></div>
+      </div>
+      <div>
+        <button class="btn-reel" onclick="reelIn('${esc(name)}','${esc(String(ver))}',${i})">REEL IN →</button>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+async function reelIn(slug, ver, idx) {
+  const btn = document.querySelector(`#echo-${idx} .btn-reel`);
+  btn.textContent = '⏳ HAULING...'; btn.classList.add('loading'); btn.disabled = true;
+  try {
+    const v = ver && ver !== '—' ? ver : 'latest';
+    const res = await fetch(`https://clawhub.ai/api/v1/download/${slug}/${v}`, { signal: AbortSignal.timeout(10000) });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const zip = await JSZip.loadAsync(await res.blob());
+    switchTab('upload');
+    await processZip(zip, slug);
+    btn.textContent = '✓ CAUGHT'; btn.classList.remove('loading'); btn.classList.add('done');
+  } catch(e) {
+    btn.textContent = 'ESCAPED'; btn.classList.remove('loading'); btn.disabled = false;
+    toast('Download failed — try manual upload', 'err');
+  }
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function toast(msg, type = '') {
+  const bay = document.getElementById('toastBay');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  bay.appendChild(t);
+  setTimeout(() => t.remove(), 3800);
+}
+</script>
+</body>
+</html>
